@@ -1,0 +1,40 @@
+# Better GDB defaults ----------------------------------------------------------
+
+set history save
+set confirm off
+set verbose off
+set print pretty on
+set print object on
+set print array on
+set print array-indexes on
+set print static-members on
+set print vtbl on
+set print demangle on
+set demangle-style gnu-v3
+set python print-stack full
+
+# Boost pretty printers
+
+python
+import sys
+sys.path.insert(0, '~/.gdb/Boost-Pretty-Printer')
+from boost.printers import register_printer_gen
+register_printer_gen(None)
+end
+
+# Stl pretty printers
+
+python
+import sys
+sys.path.insert(0, '~/.gdb/python')
+from libstdcxx.v6.printers import register_libstdcxx_printers
+#register_libstdcxx_printers (None)
+end
+
+define hookpost-up
+dashboard
+end
+
+define hookpost-down
+dashboard
+end
