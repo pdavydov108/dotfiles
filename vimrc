@@ -121,6 +121,7 @@ Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-speeddating'
 Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-dispatch'
+Plugin 'tpope/vim-tbone'
 Plugin 'a.vim'
 Plugin 'grep.vim'
 Plugin 'nginx.vim'
@@ -130,7 +131,7 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'hewes/unite-gtags'
 Plugin 'lervag/vim-latex'
 Plugin 'ktvoelker/sbt-vim'
-Plugin 'kien/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'tacahiroy/ctrlp-funky'
 Plugin 'majutsushi/tagbar'
 Plugin 'fatih/vim-go'
@@ -235,7 +236,7 @@ let Grep_Skip_Dirs="Debug Release"
 let Grep_Default_Filelist="*.c *.cpp *.h *.hpp *.hxx *.py"
 
 set background=dark
-colorscheme adam
+colorscheme badwolf
 hi Search cterm=none ctermfg=red ctermbg=yellow
 hi SpellBad ctermfg=black
 
@@ -326,3 +327,23 @@ set nofoldenable " disable folding
 " let g:syntastic_check_on_wq = 0
 " let g:syntastic_cpp_compiler_options = "-std=c++11"
 " let g:syntastic_cppcheck_config_file = "Debug/compile_commands.json"
+
+""" some pain =)
+map <Up> <Nop>
+map <Down> <Nop>
+map <Left> <Nop>
+map <Right> <Nop>
+imap <Up> <Nop>
+imap <Down> <Nop>
+imap <Left> <Nop>
+imap <Right> <Nop>
+
+""" dispatch
+nnoremap <leader>mk :Dispatch make -j4 -C Debug<CR>
+
+""" a.vim
+nnoremap <leader>A :A<CR>
+nnoremap <leader>AT :AT<CR>
+
+""" run units
+nnoremap <leader>ru :Tmux splitw -h -p 30 './Debug/tests/unit_tests'<CR>

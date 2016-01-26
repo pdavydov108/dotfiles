@@ -9,10 +9,10 @@ compinit
 antigen bundle robbyrussell/oh-my-zsh lib/
 antigen bundle zsh-users/zsh-completions src/
 antigen bundle jimmijj/zsh-syntax-highlighting
-source ~/.antigen/repos/https-COLON--SLASH--SLASH-github.com-SLASH-zsh-users-SLASH-zsh-history-substring-search.git/zsh-history-substring-search.zsh
+#source ~/.antigen/repos/https-COLON--SLASH--SLASH-github.com-SLASH-zsh-users-SLASH-zsh-history-substring-search.git/zsh-history-substring-search.zsh
 
-antigen bundle tarruda/zsh-autosuggestions
 antigen bundle zsh-users/zsh-history-substring-search
+# antigen bundle tarruda/zsh-autosuggestions
 
 # antigen oh-my-zsh features
 antigen bundle git
@@ -23,12 +23,11 @@ antigen bundle zsh-completions
 # antigen oh-my-zsh theme
 antigen theme norm
 
-
 # autosuggest
-zle-line-init() {
-  zle autosuggest-start
-}
-zle -N zle-line-init
+# zle-line-init() {
+#   zle autosuggest-start
+# }
+# zle -N zle-line-init
 
 # correction
 # setopt correctall
@@ -38,6 +37,7 @@ zle -N zle-line-init
 
 # bind UP and DOWN arrow keys
 zmodload zsh/terminfo
+
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
 #
