@@ -1,5 +1,5 @@
 # antigen
-source ~/antigen.zsh
+source ~/.antigen.zsh
 
 # completion
 autoload -U compinit
@@ -9,7 +9,7 @@ compinit
 antigen bundle robbyrussell/oh-my-zsh lib/
 antigen bundle zsh-users/zsh-completions src/
 antigen bundle jimmijj/zsh-syntax-highlighting
-#source ~/.antigen/repos/https-COLON--SLASH--SLASH-github.com-SLASH-zsh-users-SLASH-zsh-history-substring-search.git/zsh-history-substring-search.zsh
+# source ~/.antigen/repos/https-COLON--SLASH--SLASH-github.com-SLASH-zsh-users-SLASH-zsh-history-substring-search.git/zsh-history-substring-search.zsh
 
 antigen bundle zsh-users/zsh-history-substring-search
 # antigen bundle tarruda/zsh-autosuggestions
@@ -18,7 +18,7 @@ antigen bundle zsh-users/zsh-history-substring-search
 antigen bundle git
 antigen bundle pip
 antigen bundle python
-antigen bundle zsh-completions
+#antigen bundle zsh-completions
 
 # antigen oh-my-zsh theme
 antigen theme norm
@@ -53,3 +53,7 @@ bindkey -M emacs '^N' history-substring-search-down
 # bind k and j for VI mode
 bindkey -M vicmd 'k' history-substring-search-up
 bindkey -M vicmd 'j' history-substring-search-down
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export BROWSER=chrome
