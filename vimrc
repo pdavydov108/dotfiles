@@ -22,7 +22,7 @@ set showcmd		" display incomplete commands
 set incsearch		" do incremental searching
 
 " In many terminal emulators the mouse works just fine, thus enable it.
-set mouse=a
+set mouse=
 
 set ts=2
 set sw=2
@@ -99,13 +99,13 @@ Plugin 'tpope/vim-speeddating'
 Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-dispatch'
 Plugin 'tpope/vim-tbone'
+Plugin 'tpope/vim-projectionist'
 Plugin 'a.vim'
 Plugin 'grep.vim'
 Plugin 'nginx.vim'
 " Plugin 'vhdirk/vim-cmake.git'
 Plugin 'derekwyatt/vim-scala.git'
 Plugin 'scrooloose/nerdtree'
-" Plugin 'hewes/unite-gtags'
 " Plugin 'lervag/vim-latex'
 Plugin 'ktvoelker/sbt-vim'
 Plugin 'ctrlpvim/ctrlp.vim'
@@ -136,6 +136,7 @@ Plugin 'alepez/vim-gtest'
 Plugin 'alepez/vim-llvmcov'
 Plugin 'airblade/vim-gitgutter'
 " Plugin 'ensime/ensime-vim'
+Plugin 'ryanoasis/vim-devicons' " TODO : patch fonts
 Bundle 'mark'
 
 call vundle#end()
@@ -161,9 +162,14 @@ let g:ycm_autoclose_preview_window_after_completion=1
 let g:ycm_autoclose_preview_window_after_insertion=1
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py'
-noremap <Leader>t :YcmCompleter GetType<CR>
-noremap <Leader>fx :YcmCompleter FixIt<CR>
-nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp noremap <Leader>t :YcmCompleter GetType<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp noremap <Leader>fx :YcmCompleter FixIt<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
+
+autocmd FileType python nnoremap <silent> <C-]> :YcmCompleter GoTo<CR>
+autocmd FileType python nnoremap <leader>gd  :YcmCompleter GetDoc<CR>
+let g:ycm_python_binary_path = '/usr/bin/python3'
+
 
 """ cmake
 " let g:cmake_c_compiler="clang"
@@ -191,7 +197,6 @@ let g:unite_source_line_enable_highlight = 1
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#filters#sorter_default#use(['sorter_rank'])
 call unite#custom#source('file,file/new,buffer,file_rec,line', 'matchers', 'matcher_fuzzy')
-nnoremap <leader>f :<C-u>Unite -buffer-name=search -start-insert line<cr>
 
 
 """ ultisnips
@@ -232,9 +237,6 @@ autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <S-k>  :Man <C-r><C-w><CR>
 """ slime
 let g:slime_target = "tmux"
 
-""" Conque GDB
-let g:ConqueGdb_Leader="'"
-
 """ colorscheme
 colorscheme badwolf
 
@@ -262,6 +264,11 @@ imap <Up> <Nop>
 imap <Down> <Nop>
 imap <Left> <Nop>
 imap <Right> <Nop>
+imap <BS> <nop>
+imap <ESC> <nop>
+cmap <ESC> <nop>
+inoremap jj <ESC>
+cnoremap jj <ESC>
 
 """ dispatch
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>mk :Dispatch make -C Debug -j4<CR>
@@ -271,4 +278,3 @@ autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ctf :Dispatch -compiler=mak
 nnoremap <leader>A :A<CR>
 nnoremap <leader>AT :AT<CR>
 
-inoremap jj <ESC>
