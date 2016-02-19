@@ -3,6 +3,9 @@
 " pdavydov108@gmail.com
 "
 
+" remap leader
+let mapleader = "\<space>"
+
 " enable terminal colors
 set t_Co=256
 
@@ -20,6 +23,7 @@ set history=50		" keep 50 lines of command line history
 set ruler		" show the cursor position all the time
 set showcmd		" display incomplete commands
 set incsearch		" do incremental searching
+set smartcase
 
 " In many terminal emulators the mouse works just fine, thus enable it.
 set mouse=
@@ -28,49 +32,25 @@ set ts=2
 set sw=2
 set expandtab
 
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
-if &t_Co > 2 || has("gui_running")
-  syntax on
-  set hlsearch
-endif
+syntax on
+set hlsearch
 
-" Only do this part when compiled with support for autocommands.
-if has("autocmd")
+" Enable file type detection.
+" Use the default filetype settings, so that mail gets 'tw' set to 72,
+" 'cindent' is on in C files, etc.
+" Also load indent files, to automatically do language-dependent indenting.
+filetype plugin indent on
 
-  " Enable file type detection.
-  " Use the default filetype settings, so that mail gets 'tw' set to 72,
-  " 'cindent' is on in C files, etc.
-  " Also load indent files, to automatically do language-dependent indenting.
-  filetype plugin indent on
+" For all text files set 'textwidth' to 78 characters.
+autocmd FileType text setlocal textwidth=78
 
-  " Put these in an autocmd group, so that we can delete them easily.
-  augroup vimrcEx
-  au!
-
-  " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=78
-
-  " When editing a file, always jump to the last known cursor position.
-  " Don't do it when the position is invalid or when inside an event handler
-  " (happens when dropping a file on gvim).
-  autocmd BufReadPost *
-    \ if line("'\"") > 0 && line("'\"") <= line("$") |
-    \   exe "normal! g`\"" |
-    \ endif
-
-  augroup END
-
-else
-
-  set autoindent		" always set autoindenting on
-
-endif " has("autocmd")
-
-" Convenient command to see the difference between the current buffer and the
-" file it was loaded from, thus the changes you made.
-command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis
-	 	\ | wincmd p | diffthis
+" When editing a file, always jump to the last known cursor position.
+" Don't do it when the position is invalid or when inside an event handler
+" (happens when dropping a file on gvim).
+autocmd BufReadPost *
+      \ if line("'\"") > 0 && line("'\"") <= line("$") |
+      \   exe "normal! g`\"" |
+      \ endif
 
 set fileencodings=utf-8,cp1251,koi8-r,cp866
 
@@ -79,11 +59,11 @@ set number
 
 set ffs=unix,dos
 
-autocmd BufReadPost * nested
-      \ if !exists('b:reload_dos') && !&binary && &ff=='unix' && (0 < search('\r$', 'nc')) |
-      \   let b:reload_dos = 1 |
-      \   e ++ff=dos |
-      \ endif
+" autocmd BufReadPost * nested
+"       \ if !exists('b:reload_dos') && !&binary && &ff=='unix' && (0 < search('\r$', 'nc')) |
+"       \   let b:reload_dos = 1 |
+"       \   e ++ff=dos |
+"       \ endif
 
 filetype off
 set runtimepath+=~/.vim/bundle/Vundle.vim
@@ -107,9 +87,9 @@ Plugin 'nginx.vim'
 Plugin 'derekwyatt/vim-scala.git'
 Plugin 'scrooloose/nerdtree'
 " Plugin 'lervag/vim-latex'
-Plugin 'ktvoelker/sbt-vim'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'tacahiroy/ctrlp-funky'
+" Plugin 'ktvoelker/sbt-vim'
+" Plugin 'ctrlpvim/ctrlp.vim'
+" Plugin 'tacahiroy/ctrlp-funky'
 " Plugin 'majutsushi/tagbar'
 Plugin 'fatih/vim-go'
 " Plugin 'flazz/vim-colorschemes'
@@ -121,15 +101,15 @@ Plugin 'honza/vim-snippets'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'bling/vim-airline'
 Plugin 'haya14busa/incsearch.vim'
-Plugin 'Shougo/unite.vim'
+Plugin 'haya14busa/incsearch-fuzzy.vim'
+" Plugin 'Shougo/unite.vim'
 Plugin 'bruno-/vim-man'
 Plugin 'lyuts/vim-rtags'
 " Plugin 'jpalardy/vim-slime'
 Plugin 'tmux-plugins/vim-tmux'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'wting/rust.vim'
-Plugin 'rking/ag.vim'
-Plugin 'sjl/badwolf'
+" Plugin 'rking/ag.vim'
 Plugin 'dag/vim2hs'
 Plugin 'eagletmt/neco-ghc'
 Plugin 'alepez/vim-gtest'
@@ -137,6 +117,8 @@ Plugin 'alepez/vim-llvmcov'
 Plugin 'airblade/vim-gitgutter'
 " Plugin 'ensime/ensime-vim'
 Plugin 'ryanoasis/vim-devicons' " TODO : patch fonts
+Plugin 'junegunn/fzf.vim'
+Plugin 'sjl/badwolf'
 Bundle 'mark'
 
 call vundle#end()
@@ -148,7 +130,7 @@ set nobackup
 set tags=./tags;/
 
 set wildignore+=*/tmp/*,*/Debug/*,*/Release/*,*/MinSizeRel/*,*/build/*,*/target/*,*.so,*.swp,*.zip,*.jar,*.class,*.o
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+" let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 
 """ tagbar
 nmap <F8> :TagbarToggle<CR>
@@ -187,16 +169,16 @@ set laststatus=2
 set noshowmode
 
 """ unite
-let g:unite_enable_start_insert = 1
-let g:unite_split_rule = "botright"
-let g:unite_force_overwrite_statusline = 0
-let g:unite_winheight = 10
-let g:unite_candidate_icon="▶"
-let g:unite_source_line_enable_highlight = 1
-"let g:unite_options_ignorecase = 1
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-call unite#filters#sorter_default#use(['sorter_rank'])
-call unite#custom#source('file,file/new,buffer,file_rec,line', 'matchers', 'matcher_fuzzy')
+" let g:unite_enable_start_insert = 1
+" let g:unite_split_rule = "botright"
+" let g:unite_force_overwrite_statusline = 0
+" let g:unite_winheight = 10
+" let g:unite_candidate_icon="▶"
+" let g:unite_source_line_enable_highlight = 1
+" "let g:unite_options_ignorecase = 1
+" call unite#filters#matcher_default#use(['matcher_fuzzy'])
+" call unite#filters#sorter_default#use(['sorter_rank'])
+" call unite#custom#source('file,file/new,buffer,file_rec,line', 'matchers', 'matcher_fuzzy')
 
 
 """ ultisnips
@@ -205,26 +187,21 @@ let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 
-""" incsearch
-map /  <Plug>(incsearch-forward)
-map ?  <Plug>(incsearch-backward)
+""" incsearch && incsearch fuzzy
+map /  <Plug>(incsearch-fuzzy-/)
+map ?  <Plug>(incsearch-fuzzy-?)
 map g/ <Plug>(incsearch-stay)
 
 """ ctrl-p
-let g:ctrlp_map = '<c-p>'
+" let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_extensions = ['line', 'buffer']
 set wildignore+=*/tmp/*,*/Debug/*,*/Release/*,*/MinSizeRel/*,*/build/*,*/target/*,*.so,*.swp,*.zip,*.jar,*.class,*.o
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-let g:ctrlp_funky_matchtype = 'path'
-let g:ctrlp_funky_syntax_highlight = 1
-nnoremap <Leader>fu :CtrlPFunky<CR>
 nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<CR>
-nnoremap <Leader>fl :CtrlPLine<CR>
-nnoremap <Leader>fb :CtrlPBuffer<CR>
 
 """ clang format
-let g:clang_format#command = "clang-format-3.7"
+let g:clang_format#command = "/home/pablo/llvm/build/bin/clang-format"
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
 autocmd FileType c,cc,cpp,cxx,h,hpp vnoremap <buffer><Leader>cf :ClangFormat<CR>
 
@@ -275,6 +252,19 @@ autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>mk :Dispatch make -C Debug 
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ct :Dispatch -compiler=make /home/pablo/llvm/build/bin/clang-tidy -p Debug/ -checks="*" %:p<CR> 
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ctf :Dispatch -compiler=make /home/pablo/llvm/build/bin/clang-tidy -p Debug/ -checks="*" -fix-errors -fix %:p<CR> 
 
-nnoremap <leader>A :A<CR>
-nnoremap <leader>AT :AT<CR>
+nnoremap <leader>aa :A<CR>
+nnoremap <leader>at :AT<CR>
+nnoremap <leader>av :AV<CR>
 
+""" enable persistent undo check
+set undofile                " Save undo's after file closes
+set undodir=$HOME/.vim/undo " where to save undo histories
+set undolevels=1000         " How many undos
+set undoreload=10000        " number of lines to save for undo
+
+""" FZF
+set rtp+=~/.fzf
+nnoremap <leader>ff :FZF<CR>
+nnoremap <Leader>fl :Lines<CR>
+nnoremap <Leader>fb :Buffers<CR>
+nnoremap <Leader>fa :Ag 
