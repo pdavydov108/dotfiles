@@ -65,60 +65,63 @@ set ffs=unix,dos
 "       \   e ++ff=dos |
 "       \ endif
 
-filetype off
-set runtimepath+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+" automatically download vim plug if it is not installed
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall | source $MYVIMRC
+endif
 
-Plugin 'gmarik/Vundle.vim'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-rsi'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'tpope/vim-abolish'
-Plugin 'tpope/vim-speeddating'
-Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-dispatch'
-Plugin 'tpope/vim-tbone'
-Plugin 'tpope/vim-projectionist'
-Plugin 'grep.vim'
-Plugin 'nginx.vim'
-Plugin 'derekwyatt/vim-scala.git'
-Plugin 'scrooloose/nerdtree'
-" Plugin 'lervag/vim-latex'
-" Plugin 'ktvoelker/sbt-vim'
+call plug#begin('~/.vim/bundle')
+
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-rsi'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-speeddating'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-tbone'
+Plug 'tpope/vim-projectionist'
+Plug 'nginx.vim'
+Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'lervag/vim-latex', { 'for': 'latex' }
+Plug 'ktvoelker/sbt-vim', { 'for': 'scala' }
 " Plugin 'ctrlpvim/ctrlp.vim'
 " Plugin 'tacahiroy/ctrlp-funky'
-Plugin 'fatih/vim-go'
-Plugin 'rhysd/vim-clang-format'
-Plugin 'xolox/vim-misc'
-Plugin 'xolox/vim-lua-ftplugin'
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'bling/vim-airline'
-Plugin 'haya14busa/incsearch.vim'
-Plugin 'haya14busa/incsearch-fuzzy.vim'
+Plug 'fatih/vim-go', {'for': 'go'}
+Plug 'rhysd/vim-clang-format', {'for': ['c','cpp']}
+Plug 'xolox/vim-misc', {'for': 'lua'}
+Plug 'xolox/vim-lua-ftplugin', {'for': 'lua'}
+Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer', 'for': ['c', 'cpp', 'python', 'go'] }
+autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
+Plug 'bling/vim-airline'
+Plug 'haya14busa/incsearch.vim'
+Plug 'haya14busa/incsearch-fuzzy.vim'
 " Plugin 'Shougo/unite.vim'
-Plugin 'bruno-/vim-man'
-Plugin 'lyuts/vim-rtags'
+Plug 'bruno-/vim-man', { 'on': 'Man' }
+Plug 'lyuts/vim-rtags', {'for': ['c','cpp']}
 " Plugin 'jpalardy/vim-slime'
-Plugin 'tmux-plugins/vim-tmux'
-Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'wting/rust.vim'
+Plug 'tmux-plugins/vim-tmux'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'wting/rust.vim', {'for': 'rust'}
 " Plugin 'rking/ag.vim'
-Plugin 'dag/vim2hs'
-Plugin 'eagletmt/neco-ghc'
-Plugin 'alepez/vim-gtest'
-Plugin 'alepez/vim-llvmcov'
-Plugin 'airblade/vim-gitgutter'
-" Plugin 'ensime/ensime-vim'
-Plugin 'ryanoasis/vim-devicons' " TODO : patch fonts
-Plugin 'junegunn/fzf.vim'
-Plugin 'sjl/badwolf'
-Bundle 'mark'
+Plug 'dag/vim2hs', {'for': 'haskell'}
+Plug 'eagletmt/neco-ghc', {'for': 'haskell'}
+Plug 'alepez/vim-gtest', {'for': 'cpp'}
+Plug 'alepez/vim-llvmcov', {'for': 'cpp'}
+Plug 'airblade/vim-gitgutter'
+Plug 'ensime/ensime-vim', {'for': 'scala'}
+Plug 'ryanoasis/vim-devicons' " TODO : patch fonts
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'sjl/badwolf'
+Plug 'Yggdroot/vim-mark'
 
-call vundle#end()
-filetype plugin indent on
+call plug#end()
 
 set noeb vb t_vb=
 set vb
@@ -264,3 +267,5 @@ nnoremap <leader>ff :FZF<CR>
 nnoremap <Leader>fl :Lines<CR>
 nnoremap <Leader>fb :Buffers<CR>
 nnoremap <Leader>fa :Ag 
+
+command! RcSearch call fzf#run({'source': 'rc -S', 'sink': 'botright split'})
