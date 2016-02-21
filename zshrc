@@ -9,6 +9,7 @@ compinit
 antigen bundle robbyrussell/oh-my-zsh lib/
 antigen bundle zsh-users/zsh-completions src/
 antigen bundle jimmijj/zsh-syntax-highlighting
+antigen bundle rupa/z
 # source ~/.antigen/repos/https-COLON--SLASH--SLASH-github.com-SLASH-zsh-users-SLASH-zsh-history-substring-search.git/zsh-history-substring-search.zsh
 
 antigen bundle zsh-users/zsh-history-substring-search
@@ -22,6 +23,7 @@ antigen bundle python
 
 # antigen oh-my-zsh theme
 antigen theme norm
+# antigen theme robbyrussell
 
 # autosuggest
 # zle-line-init() {
@@ -57,3 +59,23 @@ bindkey -M vicmd 'j' history-substring-search-down
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 export BROWSER=chrome
+
+# disable ctrl-s XOFF feature
+stty -ixon
+
+# ALT-C - cd into the selected directory
+vo() {
+  local files=($(find -L . | fzf-tmux --select-1 --exit-0))
+  ${EDITOR:-vim} "${files[@]}"
+}
+
+# z integartion
+unalias z 2> /dev/null
+z() {
+  if [[ -z "$*" ]]; then
+    cd "$(_z -l 2>&1 | fzf +s --tac | sed 's/^[0-9,.]* *//')"
+  else
+    _z "$@"
+  fi
+}
+
