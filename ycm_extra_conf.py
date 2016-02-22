@@ -2,10 +2,14 @@ import os
 import ycm_core
 
 flags = [
-        '-I/usr/include/',
-        '-I/usr/include/x86_64-linux-gnu/',
-        '-I/usr/include/linux/',
-        '-I/usr/include/c++/5.1.1/',
+        '-isystem /usr/include/x86_64-linux-gnu/',
+        '-isystem /usr/lib/gcc/x86_64-linux-gnu/5/include',
+        '-isystem /usr/lib/gcc/x86_64-linux-gnu/5/include-fixed',
+        '-isystem /usr/include/x86_64-linux-gnu/c++/5',
+        '-isystem /usr/include/c++/5/backward',
+        '-isystem /usr/include/',
+        '-isystem /usr/include/linux/',
+        '-isystem /usr/include/c++/5.3.1/',
         '-I/usr/include/boost/',
         '-DDEBUG',
         '-std=c++14',
