@@ -111,6 +111,8 @@ Plug 'wting/rust.vim', {'for': 'rust'}
 " Plugin 'rking/ag.vim'
 Plug 'dag/vim2hs', {'for': 'haskell'}
 Plug 'eagletmt/neco-ghc', {'for': 'haskell'}
+Plug 'enomsg/vim-haskellConcealPlus', { 'for': 'haskell' }
+Plug 'mpollmeier/vim-scalaconceal', {'for': 'scala'}
 Plug 'alepez/vim-gtest', {'for': 'cpp'}
 Plug 'alepez/vim-llvmcov', {'for': 'cpp'}
 Plug 'airblade/vim-gitgutter'
@@ -247,13 +249,14 @@ inoremap jj <ESC>
 cnoremap jj <ESC>
 
 """ dispatch
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>mk :Dispatch make -C Debug -j4<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>mk :Dispatch<CR>
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ct :Dispatch -compiler=make /home/pablo/llvm/build/bin/clang-tidy -p Debug/ -checks="*" %:p<CR> 
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ctf :Dispatch -compiler=make /home/pablo/llvm/build/bin/clang-tidy -p Debug/ -checks="*" -fix-errors -fix %:p<CR> 
 
 nnoremap <leader>aa :A<CR>
 nnoremap <leader>at :AT<CR>
 nnoremap <leader>av :AV<CR>
+nnoremap <leader>ww :w<CR>
 
 """ enable persistent undo check
 set undofile                " Save undo's after file closes
@@ -269,3 +272,10 @@ nnoremap <Leader>fb :Buffers<CR>
 nnoremap <Leader>fa :Ag 
 
 command! RcSearch call fzf#run({'source': 'rc -S', 'sink': 'botright split'})
+
+""" highlight cursor position
+set number
+set cursorline
+hi cursorline cterm=none ctermbg=none
+hi cursorlinenr ctermfg=red
+
