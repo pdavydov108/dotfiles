@@ -35,6 +35,9 @@ set expandtab
 syntax on
 set hlsearch
 
+""" auto detect cpp headers
+au BufRead * if search('\M-*- C++ -*-', 'nw', 1) | setlocal ft=cpp | endif
+
 " Enable file type detection.
 " Use the default filetype settings, so that mail gets 'tw' set to 72,
 " 'cindent' is on in C files, etc.
@@ -99,8 +102,7 @@ Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer', 'for': ['c', 'cpp', 'python', 'go'] }
 autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
 Plug 'bling/vim-airline'
-Plug 'haya14busa/incsearch.vim'
-Plug 'haya14busa/incsearch-fuzzy.vim'
+Plug 'haya14busa/incsearch.vim' | Plug 'haya14busa/incsearch-fuzzy.vim'
 " Plugin 'Shougo/unite.vim'
 Plug 'bruno-/vim-man', { 'on': 'Man' }
 Plug 'lyuts/vim-rtags', {'for': ['c','cpp']}
@@ -121,7 +123,10 @@ Plug 'ryanoasis/vim-devicons' " TODO : patch fonts
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'sjl/badwolf'
+" Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'Yggdroot/vim-mark'
+Plug 'tweekmonster/braceless.vim', { 'for': 'python' }
+Plug 'junegunn/gv.vim'
 
 call plug#end()
 
@@ -257,6 +262,8 @@ nnoremap <leader>aa :A<CR>
 nnoremap <leader>at :AT<CR>
 nnoremap <leader>av :AV<CR>
 nnoremap <leader>ww :w<CR>
+nnoremap <leader>wq <c-w>q
+nnoremap <leader>wo <c-w>o
 
 """ enable persistent undo check
 set undofile                " Save undo's after file closes
@@ -279,3 +286,5 @@ set cursorline
 hi cursorline cterm=none ctermbg=none
 hi cursorlinenr ctermfg=red
 
+""" braceless python
+autocmd FileType python BracelessEnable +indent
