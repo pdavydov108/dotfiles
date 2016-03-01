@@ -83,6 +83,20 @@ vc() {
   ${EDITOR:-vim} ${file} +$line
 }
 
+# open class from last project, TODO
+vs() {
+  local class=($(rc -S --imenu | fzf-tmux --select-1 --exit-0 --query="$1"))
+  local files=($(rc -F "${class}" --definition-only -K | head -n 1))
+  local file=($(echo "${files}" | sed 's/:.*//'))
+  local line=($(echo "${files}" | sed 's/.*:\([0-9]\+\):[0-9]\+.*/\1/'))
+  local offset=($(echo "${files}" | sed 's/.*:\([0-9]\+\):\([0-9]\+\).*/\2/'))
+  # echo ${files[@]}
+  # echo $file
+  # echo $line
+  # echo $offset
+  ${EDITOR:-vim} ${file} +$line
+}
+
 # z integartion
 unalias z 2> /dev/null
 z() {
