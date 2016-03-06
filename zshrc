@@ -66,7 +66,9 @@ stty -ixon
 # start fuzzy searcher and open result in vim
 vo() {
   local files=($(find -L . | fzf-tmux --select-1 --exit-0 $1))
-  ${EDITOR:-vim} "${files[@]}"
+  if [[ ! -z ${files} ]]; then
+    ${EDITOR:-vim} "${files[@]}"
+  fi 
 }
 
 # open class from last project, TODO
@@ -80,7 +82,9 @@ vc() {
   # echo $file
   # echo $line
   # echo $offset
-  ${EDITOR:-vim} ${file} +$line
+  if [[ ! -z ${file} ]]; then
+    ${EDITOR:-vim} ${file} +$line
+  fi
 }
 
 # open class from last project, TODO
@@ -94,7 +98,9 @@ vs() {
   # echo $file
   # echo $line
   # echo $offset
-  ${EDITOR:-vim} ${file} +$line
+  if [[ ! -z ${file} ]]; then
+    ${EDITOR:-vim} ${file} +$line
+  fi
 }
 
 # z integartion

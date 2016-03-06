@@ -127,6 +127,7 @@ Plug 'sjl/badwolf'
 Plug 'Yggdroot/vim-mark'
 Plug 'tweekmonster/braceless.vim', { 'for': 'python' }
 Plug 'junegunn/gv.vim'
+" Plug 'scrooloose/syntastic', { 'on': 'SyntasticCheck' }
 
 call plug#end()
 
@@ -174,19 +175,6 @@ let g:airline_powerline_fonts = 1
 set laststatus=2
 set noshowmode
 
-""" unite
-" let g:unite_enable_start_insert = 1
-" let g:unite_split_rule = "botright"
-" let g:unite_force_overwrite_statusline = 0
-" let g:unite_winheight = 10
-" let g:unite_candidate_icon="▶"
-" let g:unite_source_line_enable_highlight = 1
-" "let g:unite_options_ignorecase = 1
-" call unite#filters#matcher_default#use(['matcher_fuzzy'])
-" call unite#filters#sorter_default#use(['sorter_rank'])
-" call unite#custom#source('file,file/new,buffer,file_rec,line', 'matchers', 'matcher_fuzzy')
-
-
 """ ultisnips
 let g:UltiSnipsExpandTrigger="<c-b>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
@@ -194,8 +182,9 @@ let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
 
 """ incsearch && incsearch fuzzy
-map /  <Plug>(incsearch-fuzzy-/)
-map ?  <Plug>(incsearch-fuzzy-?)
+map /  <Plug>(incsearch-forward)
+map <leader>s  <Plug>(incsearch-fuzzy-/)
+map ?  <Plug>(incsearch-backward)
 map g/ <Plug>(incsearch-stay)
 
 """ ctrl-p
@@ -262,6 +251,7 @@ nnoremap <leader>aa :A<CR>
 nnoremap <leader>at :AT<CR>
 nnoremap <leader>av :AV<CR>
 nnoremap <leader>ww :w<CR>
+nnoremap <leader>wa :wa<CR>
 nnoremap <leader>wq <c-w>q
 nnoremap <leader>wo <c-w>o
 
@@ -288,3 +278,44 @@ hi cursorlinenr ctermfg=red
 
 """ braceless python
 autocmd FileType python BracelessEnable +indent
+
+""" syntastic
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 0
+" let g:syntastic_check_on_wq = 0
+" let g:syntastic_clang_tidy_config_file = "Debug/compile_commands.json"
+" let g:syntastic_cppcheck_config_file = "Debug/compile_commands.json"
+
+""" open class
+function! ProcessResult(result) 
+  try
+    let args = {'F': '"'.a:result.'"'}
+    let results = rtags#ExecuteRC(args)
+    let loc = rtags#parseSourceLocation(results[0])
+    call rtags#jumpToLocation(loc[0], loc[1], loc[2])
+  catch 
+    echo v:exception
+endfunction
+
+function! RtagsSelectProject(result) 
+  try
+    let args = {'w': '"'.a:result.'"'}
+    call rtags#ExecuteRC(args)
+  catch 
+    echo v:exception
+endfunction
+
+" , 'options': '--expect=ctrl-t,ctrl-v,ctrl-x'
+
+""" rtags and fzf integration
+command! -nargs=0 FClass call fzf#run({'source': 'rc -S class', 'down': '40%', 'sink': function('ProcessResult')}) 
+command! -nargs=0 FSymbol call fzf#run({'source': 'rc -S', 'down': '40%', 'sink': function('ProcessResult')}) 
+command! -nargs=0 FProject call fzf#run({'source': 'rc -w', 'down': '40%', 'sink': function('RtagsSelectProject')}) 
+nnoremap <leader>rc :FClass<CR>
+nnoremap <leader>rm :FSymbol<CR>
+nnoremap <leader>rP :FProject<CR>
