@@ -1,0 +1,5 @@
+{
+  "*.cpp": {"alternate" : "{}.h"},
+  "*.h": {"alternate" : "{}.cpp"},
+  "*.cpp": {"dispatch" : "g++ -std=c++14 -pthread {}.cpp"}
+}
