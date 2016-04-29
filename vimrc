@@ -99,7 +99,7 @@ Plug 'rhysd/vim-clang-format', {'for': ['c','cpp']}
 Plug 'xolox/vim-misc', {'for': 'lua'}
 Plug 'xolox/vim-lua-ftplugin', {'for': 'lua'}
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer', 'for': ['c', 'cpp', 'python', 'go'] }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --racer-completer', 'for': ['c', 'cpp', 'python', 'go', 'rust'] }
 autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
 Plug 'bling/vim-airline'
 Plug 'haya14busa/incsearch.vim' | Plug 'haya14busa/incsearch-fuzzy.vim'
@@ -127,6 +127,10 @@ Plug 'sjl/badwolf'
 Plug 'Yggdroot/vim-mark'
 Plug 'tweekmonster/braceless.vim', { 'for': 'python' }
 Plug 'junegunn/gv.vim'
+Plug 'KabbAmine/yowish.vim'
+Plug 'cespare/vim-toml'
+Plug 'DoxygenToolkit.vim'
+Plug 'Chiel92/vim-autoformat'
 " Plug 'scrooloose/syntastic', { 'on': 'SyntasticCheck' }
 
 call plug#end()
@@ -254,6 +258,7 @@ nnoremap <leader>ww :w<CR>
 nnoremap <leader>wa :wa<CR>
 nnoremap <leader>wq <c-w>q
 nnoremap <leader>wo <c-w>o
+nnoremap <leader>wv <c-w>v
 
 """ enable persistent undo check
 set undofile                " Save undo's after file closes
@@ -319,3 +324,17 @@ command! -nargs=0 FProject call fzf#run({'source': 'rc -w', 'down': '40%', 'sink
 nnoremap <leader>rc :FClass<CR>
 nnoremap <leader>rm :FSymbol<CR>
 nnoremap <leader>rP :FProject<CR>
+set shell=/bin/bash
+
+""" Doxygen
+autocmd FileType c,cc,cpp,cxx,h,hpp noremap <Leader>dx :Dox<CR>
+
+""" llvm cov
+let g:llvmcov#bin = "tests"
+let g:llvmcov#pwd = "Debug"
+
+""" gtest
+let g:gtest#gtest_command = "tests"
+let g:gtest#highlight_failing_tests = 1
+nnoremap <leader>tj :GTestRunUnderCursor<CR>
+nnoremap <leader>tt :GTestRun<CR>
