@@ -12,24 +12,26 @@ set print vtbl on
 set print demangle on
 set demangle-style gnu-v3
 set python print-stack full
+set detach-on-fork off
+set schedule-multiple on
 
 # Boost pretty printers
 
-python
-import sys
-sys.path.insert(0, '~/.gdb/Boost-Pretty-Printer')
-from boost.printers import register_printer_gen
-register_printer_gen(None)
-end
+# python
+# import sys
+# sys.path.insert(0, '~/.gdb/Boost-Pretty-Printer')
+# from boost.printers import register_printer_gen
+# register_printer_gen(None)
+# end
 
 # Stl pretty printers
 
-python
-import sys
-sys.path.insert(0, '~/.gdb/python')
-from libstdcxx.v6.printers import register_libstdcxx_printers
-#register_libstdcxx_printers (None)
-end
+# python
+# import sys
+# sys.path.insert(0, '~/.gdb/python')
+# from libstdcxx.v6.printers import register_libstdcxx_printers
+# #register_libstdcxx_printers (None)
+# end
 
 define hookpost-up
 dashboard
