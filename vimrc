@@ -1,4 +1,4 @@
-" 
+"
 " My personal vim configuration
 " pdavydov108@gmail.com
 "
@@ -19,10 +19,10 @@ set nocompatible
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
-set history=50		" keep 50 lines of command line history
-set ruler		" show the cursor position all the time
-set showcmd		" display incomplete commands
-set incsearch		" do incremental searching
+set history=50    " keep 50 lines of command line history
+set ruler   " show the cursor position all the time
+set showcmd   " display incomplete commands
+set incsearch   " do incremental searching
 set smartcase
 
 " In many terminal emulators the mouse works just fine, thus enable it.
@@ -127,7 +127,6 @@ Plug 'sjl/badwolf'
 Plug 'Yggdroot/vim-mark'
 Plug 'tweekmonster/braceless.vim', { 'for': 'python' }
 Plug 'junegunn/gv.vim'
-Plug 'KabbAmine/yowish.vim'
 Plug 'cespare/vim-toml'
 Plug 'DoxygenToolkit.vim'
 Plug 'Chiel92/vim-autoformat'
@@ -199,10 +198,17 @@ set wildignore+=*/tmp/*,*/Debug/*,*/Release/*,*/MinSizeRel/*,*/build/*,*/target/
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<CR>
 
+""" vim autoformat
+let g:formatterpath = ['/home/pablo/llvm/build/bin/']
+let g:autoformat_remove_trailing_spaces = 1
+let g:autoformat_retab = 1
+nnoremap <Leader>cf :Autoformat<CR>
+" vnoremap <buffer><Leader>cf :Autoformat<CR>
+
 """ clang format
-let g:clang_format#command = "/home/pablo/llvm/build/bin/clang-format"
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
-autocmd FileType c,cc,cpp,cxx,h,hpp vnoremap <buffer><Leader>cf :ClangFormat<CR>
+"let g:clang_format#command = "/home/pablo/llvm/build/bin/clang-format"
+"autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
+"autocmd FileType c,cc,cpp,cxx,h,hpp vnoremap <buffer><Leader>cf :ClangFormat<CR>
 
 """ rtags
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <silent> <C-]> :call rtags#JumpTo()<CR>
@@ -248,8 +254,8 @@ cnoremap jj <ESC>
 
 """ dispatch
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>mk :Dispatch<CR>
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ct :Dispatch -compiler=make /home/pablo/llvm/build/bin/clang-tidy -p Debug/ -checks="*" %:p<CR> 
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ctf :Dispatch -compiler=make /home/pablo/llvm/build/bin/clang-tidy -p Debug/ -checks="*" -fix-errors -fix %:p<CR> 
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ct :Dispatch -compiler=make /home/pablo/llvm/build/bin/clang-tidy -p Debug/ -checks="*" %:p<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ctf :Dispatch -compiler=make /home/pablo/llvm/build/bin/clang-tidy -p Debug/ -checks="*" -fix-errors -fix %:p<CR>
 
 nnoremap <leader>aa :A<CR>
 nnoremap <leader>at :AT<CR>
@@ -271,7 +277,7 @@ set rtp+=~/.fzf
 nnoremap <leader>ff :FZF<CR>
 nnoremap <Leader>fl :Lines<CR>
 nnoremap <Leader>fb :Buffers<CR>
-nnoremap <Leader>fa :Ag 
+nnoremap <Leader>fa :Ag
 
 command! RcSearch call fzf#run({'source': 'rc -S', 'sink': 'botright split'})
 
@@ -297,30 +303,30 @@ autocmd FileType python BracelessEnable +indent
 " let g:syntastic_cppcheck_config_file = "Debug/compile_commands.json"
 
 """ open class
-function! ProcessResult(result) 
+function! ProcessResult(result)
   try
     let args = {'F': '"'.a:result.'"'}
     let results = rtags#ExecuteRC(args)
     let loc = rtags#parseSourceLocation(results[0])
     call rtags#jumpToLocation(loc[0], loc[1], loc[2])
-  catch 
+  catch
     echo v:exception
 endfunction
 
-function! RtagsSelectProject(result) 
+function! RtagsSelectProject(result)
   try
     let args = {'w': '"'.a:result.'"'}
     call rtags#ExecuteRC(args)
-  catch 
+  catch
     echo v:exception
 endfunction
 
 " , 'options': '--expect=ctrl-t,ctrl-v,ctrl-x'
 
 """ rtags and fzf integration
-command! -nargs=0 FClass call fzf#run({'source': 'rc -S class', 'down': '40%', 'sink': function('ProcessResult')}) 
-command! -nargs=0 FSymbol call fzf#run({'source': 'rc -S', 'down': '40%', 'sink': function('ProcessResult')}) 
-command! -nargs=0 FProject call fzf#run({'source': 'rc -w', 'down': '40%', 'sink': function('RtagsSelectProject')}) 
+command! -nargs=0 FClass call fzf#run({'source': 'rc -S class', 'down': '40%', 'sink': function('ProcessResult')})
+command! -nargs=0 FSymbol call fzf#run({'source': 'rc -S', 'down': '40%', 'sink': function('ProcessResult')})
+command! -nargs=0 FProject call fzf#run({'source': 'rc -w', 'down': '40%', 'sink': function('RtagsSelectProject')})
 nnoremap <leader>rc :FClass<CR>
 nnoremap <leader>rm :FSymbol<CR>
 nnoremap <leader>rP :FProject<CR>
