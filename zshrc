@@ -74,15 +74,15 @@ vo() {
 # open class from last project, TODO
 vc() {
   local class=($(rc -S class | fzf-tmux --select-1 --exit-0 --query="$1"))
-  local files=($(rc -F "${class}" --definition-only -K | head -n 1))
-  local file=($(echo "${files}" | sed 's/:.*//'))
-  local line=($(echo "${files}" | sed 's/.*:\([0-9]\+\):[0-9]\+.*/\1/'))
-  local offset=($(echo "${files}" | sed 's/.*:\([0-9]\+\):\([0-9]\+\).*/\2/'))
-  # echo ${files[@]}
-  # echo $file
-  # echo $line
-  # echo $offset
-  if [[ ! -z ${file} ]]; then
+  if [[ ! -z ${class} ]]; then
+    local files=($(rc -F "${class}" --definition-only -K | head -n 1))
+    local file=($(echo "${files}" | sed 's/:.*//'))
+    local line=($(echo "${files}" | sed 's/.*:\([0-9]\+\):[0-9]\+.*/\1/'))
+    local offset=($(echo "${files}" | sed 's/.*:\([0-9]\+\):\([0-9]\+\).*/\2/'))
+    # echo ${files[@]}
+    # echo $file
+    # echo $line
+    # echo $offset
     ${EDITOR:-vim} ${file} +$line
   fi
 }
@@ -90,15 +90,15 @@ vc() {
 # open class from last project, TODO
 vs() {
   local class=($(rc -S --imenu | fzf-tmux --select-1 --exit-0 --query="$1"))
-  local files=($(rc -F "${class}" --definition-only -K | head -n 1))
-  local file=($(echo "${files}" | sed 's/:.*//'))
-  local line=($(echo "${files}" | sed 's/.*:\([0-9]\+\):[0-9]\+.*/\1/'))
-  local offset=($(echo "${files}" | sed 's/.*:\([0-9]\+\):\([0-9]\+\).*/\2/'))
-  # echo ${files[@]}
-  # echo $file
-  # echo $line
-  # echo $offset
-  if [[ ! -z ${file} ]]; then
+  if [[ ! -z ${class} ]]; then
+    local files=($(rc -F "${class}" --definition-only -K | head -n 1))
+    local file=($(echo "${files}" | sed 's/:.*//'))
+    local line=($(echo "${files}" | sed 's/.*:\([0-9]\+\):[0-9]\+.*/\1/'))
+    local offset=($(echo "${files}" | sed 's/.*:\([0-9]\+\):\([0-9]\+\).*/\2/'))
+    # echo ${files[@]}
+    # echo $file
+    # echo $line
+    # echo $offset
     ${EDITOR:-vim} ${file} +$line
   fi
 }
@@ -131,3 +131,9 @@ ftpane() {
       tmux select-window -t $target_window
   fi
 }
+
+
+PATH=$PATH:"/home/pablo/.cargo/bin"
+# source ~/.xsh
+
+alias octave=octave-cli
