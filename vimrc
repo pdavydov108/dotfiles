@@ -212,7 +212,7 @@ nnoremap <Leader>cf :Autoformat<CR>
 "autocmd FileType c,cc,cpp,cxx,h,hpp vnoremap <buffer><Leader>cf :ClangFormat<CR>
 
 """ rtags
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <silent> <C-]> :call rtags#JumpTo()<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <silent> <C-]> :call rtags#JumpTo(g:SAME_WINDOW)<CR>
 
 """ man
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <S-k>  :Man <C-r><C-w><CR>
@@ -338,7 +338,7 @@ autocmd FileType c,cc,cpp,cxx,h,hpp noremap <Leader>dx :Dox<CR>
 
 """ llvm cov
 let g:llvmcov#bin = "tests"
-let g:llvmcov#pwd = "tests"
+let g:llvmcov#pwd = "Debug"
 
 """ gtest
 let g:gtest#gtest_command = "tests"
