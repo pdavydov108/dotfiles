@@ -99,7 +99,7 @@ Plug 'rhysd/vim-clang-format', {'for': ['c','cpp']}
 Plug 'xolox/vim-misc', {'for': 'lua'}
 Plug 'xolox/vim-lua-ftplugin', {'for': 'lua'}
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --racer-completer', 'for': ['c', 'cpp', 'python', 'go', 'rust'] }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --racer-completer', 'for': ['c', 'cpp', 'python', 'go', 'rust', 'java', 'scala'] }
 autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
 Plug 'bling/vim-airline'
 Plug 'haya14busa/incsearch.vim' | Plug 'haya14busa/incsearch-fuzzy.vim'
@@ -118,7 +118,7 @@ Plug 'mpollmeier/vim-scalaconceal', {'for': 'scala'}
 Plug 'alepez/vim-gtest', {'for': 'cpp'}
 Plug 'alepez/vim-llvmcov', {'for': 'cpp'}
 Plug 'airblade/vim-gitgutter'
-Plug 'ensime/ensime-vim', {'for': 'scala'}
+Plug 'ensime/ensime-vim', {'for': ['scala', 'java']}
 Plug 'ryanoasis/vim-devicons' " TODO : patch fonts
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -130,6 +130,7 @@ Plug 'junegunn/gv.vim'
 Plug 'cespare/vim-toml'
 Plug 'DoxygenToolkit.vim'
 Plug 'Chiel92/vim-autoformat'
+Plug 'jeaye/color_coded', { 'do': 'cmake . && make && make install', 'for': ['c', 'cpp']}
 " Plug 'scrooloose/syntastic', { 'on': 'SyntasticCheck' }
 
 call plug#end()
@@ -337,10 +338,14 @@ autocmd FileType c,cc,cpp,cxx,h,hpp noremap <Leader>dx :Dox<CR>
 
 """ llvm cov
 let g:llvmcov#bin = "tests"
-let g:llvmcov#pwd = "Debug"
+let g:llvmcov#pwd = "tests"
 
 """ gtest
 let g:gtest#gtest_command = "tests"
 let g:gtest#highlight_failing_tests = 1
 nnoremap <leader>tj :GTestRunUnderCursor<CR>
 nnoremap <leader>tt :GTestRun<CR>
+
+""" ensime
+autocmd FileType java,scala nnoremap <c-]> :EnDeclaration<CR>
+autocmd FileType java,scala nnoremap <leader>t :EnInspectType<CR>
