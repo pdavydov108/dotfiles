@@ -59,6 +59,7 @@ set fileencodings=utf-8,cp1251,koi8-r,cp866
 
 " enable line numbers
 set number
+set relativenumber
 
 set ffs=unix,dos
 
@@ -79,6 +80,7 @@ call plug#begin('~/.vim/bundle')
 
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-rsi'
+Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-abolish'
@@ -91,7 +93,7 @@ Plug 'nginx.vim'
 Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'lervag/vim-latex', { 'for': 'latex' }
-Plug 'ktvoelker/sbt-vim', { 'for': 'scala' }
+" Plug 'ktvoelker/sbt-vim', { 'for': 'scala' }
 " Plugin 'ctrlpvim/ctrlp.vim'
 " Plugin 'tacahiroy/ctrlp-funky'
 Plug 'fatih/vim-go', {'for': 'go'}
@@ -118,7 +120,7 @@ Plug 'mpollmeier/vim-scalaconceal', {'for': 'scala'}
 Plug 'alepez/vim-gtest', {'for': 'cpp'}
 Plug 'alepez/vim-llvmcov', {'for': 'cpp'}
 Plug 'airblade/vim-gitgutter'
-Plug 'ensime/ensime-vim', {'for': ['scala', 'java']}
+Plug 'ensime/ensime-vim'  , {'for': ['scala', 'java']}
 Plug 'ryanoasis/vim-devicons' " TODO : patch fonts
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -130,7 +132,9 @@ Plug 'junegunn/gv.vim'
 Plug 'cespare/vim-toml'
 Plug 'DoxygenToolkit.vim'
 Plug 'Chiel92/vim-autoformat'
+Plug 'nickhutchinson/vim-systemtap'
 Plug 'jeaye/color_coded', { 'do': 'cmake . && make && make install', 'for': ['c', 'cpp']}
+Plug 'rdnetto/YCM-Generator', {'branch': 'stable'}
 " Plug 'scrooloose/syntastic', { 'on': 'SyntasticCheck' }
 
 call plug#end()
@@ -161,7 +165,7 @@ autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <F5> :YcmForceCompileAndDiagnostics
 
 autocmd FileType python nnoremap <silent> <C-]> :YcmCompleter GoTo<CR>
 autocmd FileType python nnoremap <leader>gd  :YcmCompleter GetDoc<CR>
-let g:ycm_python_binary_path = '/usr/bin/python3'
+" let g:ycm_python_binary_path = '/usr/bin/python'
 
 
 """ cmake
@@ -277,6 +281,7 @@ set undoreload=10000        " number of lines to save for undo
 set rtp+=~/.fzf
 nnoremap <leader>ff :FZF<CR>
 nnoremap <Leader>fl :Lines<CR>
+nnoremap <Leader>fj :BLines<CR>
 nnoremap <Leader>fb :Buffers<CR>
 nnoremap <Leader>fa :Ag
 
@@ -349,3 +354,10 @@ nnoremap <leader>tt :GTestRun<CR>
 """ ensime
 autocmd FileType java,scala nnoremap <c-]> :EnDeclaration<CR>
 autocmd FileType java,scala nnoremap <leader>t :EnInspectType<CR>
+
+""" super relative numbers
+au FocusLost * :set number
+au FocusGained * :set relativenumber
+
+autocmd InsertEnter * :set number
+autocmd InsertLeave * :set relativenumber
