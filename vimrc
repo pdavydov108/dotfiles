@@ -1,13 +1,12 @@
-"
+" 
 " My personal vim configuration
 " pdavydov108@gmail.com
 "
-
 " remap leader
 let mapleader = "\<space>"
 
 " enable terminal colors
-set t_Co=256
+" set t_Co=256
 
 " set leader timeout
 set timeout ttimeoutlen=100 timeoutlen=1000
@@ -19,17 +18,17 @@ set nocompatible
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
-set history=50    " keep 50 lines of command line history
-set ruler   " show the cursor position all the time
-set showcmd   " display incomplete commands
-set incsearch   " do incremental searching
+set history=50		" keep 50 lines of command line history
+set ruler		" show the cursor position all the time
+set showcmd		" display incomplete commands
+set incsearch		" do incremental searching
 set smartcase
 
 " In many terminal emulators the mouse works just fine, thus enable it.
 set mouse=
 
-set ts=2
-set sw=2
+set ts=4
+set sw=4
 set expandtab
 
 syntax on
@@ -59,7 +58,6 @@ set fileencodings=utf-8,cp1251,koi8-r,cp866
 
 " enable line numbers
 set number
-set relativenumber
 
 set ffs=unix,dos
 
@@ -80,7 +78,6 @@ call plug#begin('~/.vim/bundle')
 
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-rsi'
-Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-abolish'
@@ -90,6 +87,7 @@ Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-tbone'
 Plug 'tpope/vim-projectionist'
 Plug 'nginx.vim'
+Plug 'ryanoasis/vim-devicons' " TODO : patch fonts
 Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'lervag/vim-latex', { 'for': 'latex' }
@@ -101,8 +99,8 @@ Plug 'rhysd/vim-clang-format', {'for': ['c','cpp']}
 Plug 'xolox/vim-misc', {'for': 'lua'}
 Plug 'xolox/vim-lua-ftplugin', {'for': 'lua'}
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --racer-completer', 'for': ['c', 'cpp', 'python', 'go', 'rust', 'java', 'scala'] }
-autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --racer-completer'} ", 'for': ['c', 'cpp', 'python', 'go', 'rust', 'java', 'scala'] }
+" autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
 Plug 'bling/vim-airline'
 Plug 'haya14busa/incsearch.vim' | Plug 'haya14busa/incsearch-fuzzy.vim'
 " Plugin 'Shougo/unite.vim'
@@ -111,7 +109,7 @@ Plug 'lyuts/vim-rtags', {'for': ['c','cpp']}
 " Plugin 'jpalardy/vim-slime'
 Plug 'tmux-plugins/vim-tmux'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'wting/rust.vim', {'for': 'rust'}
+Plug 'rust-lang/rust.vim', {'for': 'rust'}
 " Plugin 'rking/ag.vim'
 Plug 'dag/vim2hs', {'for': 'haskell'}
 Plug 'eagletmt/neco-ghc', {'for': 'haskell'}
@@ -120,8 +118,7 @@ Plug 'mpollmeier/vim-scalaconceal', {'for': 'scala'}
 Plug 'alepez/vim-gtest', {'for': 'cpp'}
 Plug 'alepez/vim-llvmcov', {'for': 'cpp'}
 Plug 'airblade/vim-gitgutter'
-Plug 'ensime/ensime-vim'  , {'for': ['scala', 'java']}
-Plug 'ryanoasis/vim-devicons' " TODO : patch fonts
+" Plug 'pdavydov108/ensime-vim', {'for': ['scala', 'java']}
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'sjl/badwolf'
@@ -129,13 +126,18 @@ Plug 'sjl/badwolf'
 Plug 'Yggdroot/vim-mark'
 Plug 'tweekmonster/braceless.vim', { 'for': 'python' }
 Plug 'junegunn/gv.vim'
+Plug 'KabbAmine/yowish.vim'
 Plug 'cespare/vim-toml'
 Plug 'DoxygenToolkit.vim'
 Plug 'Chiel92/vim-autoformat'
-Plug 'nickhutchinson/vim-systemtap'
-Plug 'jeaye/color_coded', { 'do': 'cmake . && make && make install', 'for': ['c', 'cpp']}
-Plug 'rdnetto/YCM-Generator', {'branch': 'stable'}
-" Plug 'scrooloose/syntastic', { 'on': 'SyntasticCheck' }
+" Plug 'jeaye/color_coded', { 'do': 'cmake . && make && make install', 'for': ['c', 'cpp']}
+" Plug 'scrooloose/syntastic', { 'for': 'scala' }
+" Plug 'erekwyatt/vim-sbt', { 'for': 'sbt' }
+Plug 'morhetz/gruvbox'
+Plug 'timonv/vim-cargo'
+Plug 'mbbill/undotree'
+" Plug 'neomake/neomake'
+Plug 'w0rp/ale', {'for': ['rust', 'vim']}
 
 call plug#end()
 
@@ -159,13 +161,16 @@ let g:ycm_autoclose_preview_window_after_completion=1
 let g:ycm_autoclose_preview_window_after_insertion=1
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py'
+let g:ycm_rust_src_path = '/home/pablo/rust/rust-git/src'
 autocmd FileType c,cc,cpp,cxx,h,hpp noremap <Leader>t :YcmCompleter GetType<CR>
 autocmd FileType c,cc,cpp,cxx,h,hpp noremap <Leader>fx :YcmCompleter FixIt<CR>
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
 
-autocmd FileType python nnoremap <silent> <C-]> :YcmCompleter GoTo<CR>
+autocmd FileType python nnoremap <leader>jj :YcmCompleter GoTo<CR>
 autocmd FileType python nnoremap <leader>gd  :YcmCompleter GetDoc<CR>
-" let g:ycm_python_binary_path = '/usr/bin/python'
+let g:ycm_python_binary_path = '/usr/bin/python3'
+autocmd FileType rust nnoremap <leader>jj :YcmCompleter GoTo<CR>
+
 
 
 """ cmake
@@ -208,15 +213,14 @@ let g:formatterpath = ['/home/pablo/llvm/build/bin/']
 let g:autoformat_remove_trailing_spaces = 1
 let g:autoformat_retab = 1
 nnoremap <Leader>cf :Autoformat<CR>
-" vnoremap <buffer><Leader>cf :Autoformat<CR>
 
 """ clang format
-"let g:clang_format#command = "/home/pablo/llvm/build/bin/clang-format"
-"autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
-"autocmd FileType c,cc,cpp,cxx,h,hpp vnoremap <buffer><Leader>cf :ClangFormat<CR>
+" let g:clang_format#command = "/home/pablo/llvm/build/bin/clang-format"
+" autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
+" autocmd FileType c,cc,cpp,cxx,h,hpp vnoremap <buffer><Leader>cf :ClangFormat<CR>
 
 """ rtags
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <silent> <C-]> :call rtags#JumpTo(g:SAME_WINDOW)<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <silent> <leader>jj :call rtags#JumpTo(g:SAME_WINDOW)<CR>
 
 """ man
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <S-k>  :Man <C-r><C-w><CR>
@@ -225,7 +229,8 @@ autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <S-k>  :Man <C-r><C-w><CR>
 let g:slime_target = "tmux"
 
 """ colorscheme
-colorscheme badwolf
+set background=dark
+colorscheme gruvbox 
 
 """ vim2hs
 set nofoldenable " disable folding
@@ -259,8 +264,9 @@ cnoremap jj <ESC>
 
 """ dispatch
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>mk :Dispatch<CR>
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ct :Dispatch -compiler=make /home/pablo/llvm/build/bin/clang-tidy -p Debug/ -checks="*" %:p<CR>
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ctf :Dispatch -compiler=make /home/pablo/llvm/build/bin/clang-tidy -p Debug/ -checks="*" -fix-errors -fix %:p<CR>
+autocmd FileType rust nnoremap <leader>mk :Dispatch cargo build<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ct :Dispatch -compiler=make /home/pablo/llvm/build/bin/clang-tidy -p Debug/  %:p<CR> 
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ctf :Dispatch -compiler=make /home/pablo/llvm/build/bin/clang-tidy -p Debug/ -fix-errors -fix %:p<CR> 
 
 nnoremap <leader>aa :A<CR>
 nnoremap <leader>at :AT<CR>
@@ -280,18 +286,12 @@ set undoreload=10000        " number of lines to save for undo
 """ FZF
 set rtp+=~/.fzf
 nnoremap <leader>ff :FZF<CR>
-nnoremap <Leader>fl :Lines<CR>
 nnoremap <Leader>fj :BLines<CR>
+nnoremap <Leader>fJ :Lines<CR>
 nnoremap <Leader>fb :Buffers<CR>
-nnoremap <Leader>fa :Ag
+nnoremap <Leader>fa :Ag 
 
 command! RcSearch call fzf#run({'source': 'rc -S', 'sink': 'botright split'})
-
-""" highlight cursor position
-set number
-set cursorline
-hi cursorline cterm=none ctermbg=none
-hi cursorlinenr ctermfg=red
 
 """ braceless python
 autocmd FileType python BracelessEnable +indent
@@ -309,30 +309,30 @@ autocmd FileType python BracelessEnable +indent
 " let g:syntastic_cppcheck_config_file = "Debug/compile_commands.json"
 
 """ open class
-function! ProcessResult(result)
+function! ProcessResult(result) 
   try
     let args = {'F': '"'.a:result.'"'}
     let results = rtags#ExecuteRC(args)
     let loc = rtags#parseSourceLocation(results[0])
     call rtags#jumpToLocation(loc[0], loc[1], loc[2])
-  catch
+  catch 
     echo v:exception
 endfunction
 
-function! RtagsSelectProject(result)
+function! RtagsSelectProject(result) 
   try
     let args = {'w': '"'.a:result.'"'}
     call rtags#ExecuteRC(args)
-  catch
+  catch 
     echo v:exception
 endfunction
 
 " , 'options': '--expect=ctrl-t,ctrl-v,ctrl-x'
 
 """ rtags and fzf integration
-command! -nargs=0 FClass call fzf#run({'source': 'rc -S class', 'down': '40%', 'sink': function('ProcessResult')})
-command! -nargs=0 FSymbol call fzf#run({'source': 'rc -S', 'down': '40%', 'sink': function('ProcessResult')})
-command! -nargs=0 FProject call fzf#run({'source': 'rc -w', 'down': '40%', 'sink': function('RtagsSelectProject')})
+command! -nargs=0 FClass call fzf#run({'source': 'rc -S class', 'down': '40%', 'sink': function('ProcessResult')}) 
+command! -nargs=0 FSymbol call fzf#run({'source': 'rc -S', 'down': '40%', 'sink': function('ProcessResult')}) 
+command! -nargs=0 FProject call fzf#run({'source': 'rc -w', 'down': '40%', 'sink': function('RtagsSelectProject')}) 
 nnoremap <leader>rc :FClass<CR>
 nnoremap <leader>rm :FSymbol<CR>
 nnoremap <leader>rP :FProject<CR>
@@ -342,22 +342,49 @@ set shell=/bin/bash
 autocmd FileType c,cc,cpp,cxx,h,hpp noremap <Leader>dx :Dox<CR>
 
 """ llvm cov
-let g:llvmcov#bin = "tests"
+let g:llvmcov#bin = "Debug"
 let g:llvmcov#pwd = "Debug"
 
 """ gtest
-let g:gtest#gtest_command = "tests"
+let g:gtest#gtest_command = "Debug"
 let g:gtest#highlight_failing_tests = 1
 nnoremap <leader>tj :GTestRunUnderCursor<CR>
 nnoremap <leader>tt :GTestRun<CR>
 
 """ ensime
-autocmd FileType java,scala nnoremap <c-]> :EnDeclaration<CR>
+autocmd FileType java,scala nnoremap <silent> <C-]> :EnGoDefinition<CR>
 autocmd FileType java,scala nnoremap <leader>t :EnInspectType<CR>
 
-""" super relative numbers
-au FocusLost * :set number
-au FocusGained * :set relativenumber
+""" enable terminal true color
+set termguicolors
 
-autocmd InsertEnter * :set number
-autocmd InsertLeave * :set relativenumber
+""" highlight cursor position
+set number
+set cursorline
+set relativenumber
+hi cursorline cterm=none ctermbg=none
+hi cursorlinenr ctermfg=red
+
+let g:gruvbox_contrast_dark="hard"
+
+""" cargo
+let g:cargo_command = "Dispatch cargo {cmd}"
+autocmd FileType rust nnoremap <leader>mk :CargoBuild<CR>
+
+""" undotree
+nnoremap <leader>ut :UndotreeToggle<CR>
+
+""" ale
+" highlight clear ALEErrorSign
+highlight clear ALEWarningSign
+let g:ale_sign_error = '✗'
+let g:ale_sign_warning = '‼'
+let g:ale_cpp_clangtidy_options = '-p ./Debug/'
+let g:ale_linters = {
+            \   'python': ['mypy'],
+            \   'rust': ['cargo'],
+            \   'cpp': ['clangtidy'],
+            \   'vim': ['all']
+            \}
+nmap <silent> <leader>k <Plug>(ale_previous_wrap)
+nmap <silent> <leader>j <Plug>(ale_next_wrap)
