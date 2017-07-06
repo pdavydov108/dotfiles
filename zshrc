@@ -1,29 +1,40 @@
 # antigen
 source ~/.antigen.zsh
 
-# completion
-autoload -U compinit
-compinit
-
 # antigen plugins
-antigen bundle robbyrussell/oh-my-zsh lib/
-antigen bundle zsh-users/zsh-completions src/
+antigen use oh-my-zsh
 antigen bundle jimmijj/zsh-syntax-highlighting
 antigen bundle rupa/z
 # source ~/.antigen/repos/https-COLON--SLASH--SLASH-github.com-SLASH-zsh-users-SLASH-zsh-history-substring-search.git/zsh-history-substring-search.zsh
 
 antigen bundle zsh-users/zsh-history-substring-search
 # antigen bundle tarruda/zsh-autosuggestions
+antigen bundle zsh-users/zsh-completions src/
 
 # antigen oh-my-zsh features
 antigen bundle git
 antigen bundle pip
 antigen bundle python
+antigen bundle dnf
+antigen bundle git-extras
+antigen bundle jira
+antigen bundle pip
+antigen bundle sbt
+antigen bundle cargo 
+antigen bundle scala
+antigen bundle sudo
+antigen bundle systemd
+antigen bundle vagrant
+antigen bundle web-search
+antigen bundle colored-man-pages
+antigen bundle skroll/zsh-cmake-completion
 #antigen bundle zsh-completions
 
-# antigen oh-my-zsh theme
-antigen theme norm
-# antigen theme robbyrussell
+antigen apply
+
+# completion
+autoload -U compinit
+compinit
 
 # autosuggest
 # zle-line-init() {
@@ -74,15 +85,15 @@ vo() {
 # open class from last project, TODO
 vc() {
   local class=($(rc -S class | fzf-tmux --select-1 --exit-0 --query="$1"))
-  if [[ ! -z ${class} ]]; then
-    local files=($(rc -F "${class}" --definition-only -K | head -n 1))
-    local file=($(echo "${files}" | sed 's/:.*//'))
-    local line=($(echo "${files}" | sed 's/.*:\([0-9]\+\):[0-9]\+.*/\1/'))
-    local offset=($(echo "${files}" | sed 's/.*:\([0-9]\+\):\([0-9]\+\).*/\2/'))
-    # echo ${files[@]}
-    # echo $file
-    # echo $line
-    # echo $offset
+  local files=($(rc -F "${class}" --definition-only -K | head -n 1))
+  local file=($(echo "${files}" | sed 's/:.*//'))
+  local line=($(echo "${files}" | sed 's/.*:\([0-9]\+\):[0-9]\+.*/\1/'))
+  local offset=($(echo "${files}" | sed 's/.*:\([0-9]\+\):\([0-9]\+\).*/\2/'))
+  # echo ${files[@]}
+  # echo $file
+  # echo $line
+  # echo $offset
+  if [[ ! -z ${file} ]]; then
     ${EDITOR:-vim} ${file} +$line
   fi
 }
@@ -90,15 +101,15 @@ vc() {
 # open class from last project, TODO
 vs() {
   local class=($(rc -S --imenu | fzf-tmux --select-1 --exit-0 --query="$1"))
-  if [[ ! -z ${class} ]]; then
-    local files=($(rc -F "${class}" --definition-only -K | head -n 1))
-    local file=($(echo "${files}" | sed 's/:.*//'))
-    local line=($(echo "${files}" | sed 's/.*:\([0-9]\+\):[0-9]\+.*/\1/'))
-    local offset=($(echo "${files}" | sed 's/.*:\([0-9]\+\):\([0-9]\+\).*/\2/'))
-    # echo ${files[@]}
-    # echo $file
-    # echo $line
-    # echo $offset
+  local files=($(rc -F "${class}" --definition-only -K | head -n 1))
+  local file=($(echo "${files}" | sed 's/:.*//'))
+  local line=($(echo "${files}" | sed 's/.*:\([0-9]\+\):[0-9]\+.*/\1/'))
+  local offset=($(echo "${files}" | sed 's/.*:\([0-9]\+\):\([0-9]\+\).*/\2/'))
+  # echo ${files[@]}
+  # echo $file
+  # echo $line
+  # echo $offset
+  if [[ ! -z ${file} ]]; then
     ${EDITOR:-vim} ${file} +$line
   fi
 }
@@ -132,8 +143,10 @@ ftpane() {
   fi
 }
 
+# vim() { vimx --servername debug "$*"; }
+# vi() { vimx --servername debug "$*"; }
 
-PATH=$PATH:"/home/pablo/.cargo/bin"
-# source ~/.xsh
+export _JAVA_OPTIONS="-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel"
+export PATH=$PATH:$HOME/.cargo/bin
 
-alias octave=octave-cli
+antigen theme robbyrussell
