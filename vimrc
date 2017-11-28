@@ -86,7 +86,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-tbone'
 Plug 'tpope/vim-projectionist'
-Plug 'nginx.vim'
+" Plug 'nginx.vim'
 Plug 'ryanoasis/vim-devicons' " TODO : patch fonts
 Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
@@ -102,7 +102,7 @@ Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --racer-completer'} ", 'for': ['c', 'cpp', 'python', 'go', 'rust', 'java', 'scala'] }
 " autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
 Plug 'bling/vim-airline'
-Plug 'haya14busa/incsearch.vim' | Plug 'haya14busa/incsearch-fuzzy.vim'
+Plug 'haya14busa/is.vim'
 " Plugin 'Shougo/unite.vim'
 Plug 'bruno-/vim-man', { 'on': 'Man' }
 Plug 'lyuts/vim-rtags', {'for': ['c','cpp']}
@@ -128,7 +128,7 @@ Plug 'tweekmonster/braceless.vim', { 'for': 'python' }
 Plug 'junegunn/gv.vim'
 Plug 'KabbAmine/yowish.vim'
 Plug 'cespare/vim-toml'
-Plug 'DoxygenToolkit.vim'
+" Plug 'DoxygenToolkit.vim'
 Plug 'Chiel92/vim-autoformat'
 " Plug 'jeaye/color_coded', { 'do': 'cmake . && make && make install', 'for': ['c', 'cpp']}
 " Plug 'scrooloose/syntastic', { 'for': 'scala' }
@@ -137,7 +137,7 @@ Plug 'morhetz/gruvbox'
 Plug 'timonv/vim-cargo'
 Plug 'mbbill/undotree'
 " Plug 'neomake/neomake'
-Plug 'w0rp/ale', {'for': ['rust', 'vim']}
+Plug 'w0rp/ale', {'for': ['rust', 'vim', 'cpp']}
 
 call plug#end()
 
@@ -193,13 +193,6 @@ let g:UltiSnipsExpandTrigger="<c-b>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
-
-""" incsearch && incsearch fuzzy
-map /  <Plug>(incsearch-forward)
-map <leader>s  <Plug>(incsearch-fuzzy-/)
-map ?  <Plug>(incsearch-backward)
-map g/ <Plug>(incsearch-stay)
-
 """ ctrl-p
 " let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
@@ -215,7 +208,7 @@ let g:autoformat_retab = 1
 nnoremap <Leader>cf :Autoformat<CR>
 
 """ clang format
-" let g:clang_format#command = "/home/pablo/llvm/build/bin/clang-format"
+" let g:clang_format#command = "clang-format-5.0"
 " autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <buffer><Leader>cf :<C-u>ClangFormat<CR>
 " autocmd FileType c,cc,cpp,cxx,h,hpp vnoremap <buffer><Leader>cf :ClangFormat<CR>
 
@@ -256,7 +249,7 @@ imap <Up> <Nop>
 imap <Down> <Nop>
 imap <Left> <Nop>
 imap <Right> <Nop>
-imap <BS> <nop>
+" imap <BS> <nop>
 imap <ESC> <nop>
 cmap <ESC> <nop>
 inoremap jj <ESC>
@@ -265,8 +258,8 @@ cnoremap jj <ESC>
 """ dispatch
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>mk :Dispatch<CR>
 autocmd FileType rust nnoremap <leader>mk :Dispatch cargo build<CR>
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ct :Dispatch -compiler=make /home/pablo/llvm/build/bin/clang-tidy -p Debug/  %:p<CR> 
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ctf :Dispatch -compiler=make /home/pablo/llvm/build/bin/clang-tidy -p Debug/ -fix-errors -fix %:p<CR> 
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ct :Dispatch -compiler=make clang-tidy-6.0 -p Debug/  %:p<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ctf :Dispatch -compiler=make clang-tidy-6.0 -p Debug/ -fix-errors -fix %:p<CR>
 
 nnoremap <leader>aa :A<CR>
 nnoremap <leader>at :AT<CR>
@@ -379,7 +372,10 @@ nnoremap <leader>ut :UndotreeToggle<CR>
 highlight clear ALEWarningSign
 let g:ale_sign_error = '✗'
 let g:ale_sign_warning = '‼'
-let g:ale_cpp_clangtidy_options = '-p ./Debug/'
+let g:ale_set_quickfix = 0
+let g:ale_set_loclist = 0
+let g:ale_cpp_clangtidy_executable = 'clang-tidy-6.0'
+let g:ale_cpp_clangtidy_checks = ['-google-readability*', '-llvm-include-order*', '-readability-implicit-bool-cast', 'performance*', 'cppcoreguidelines*', '-cppcoreguidelines-pro-bounds-array-to-pointer-decay', '-cppcoreguidelines-special-member-functions', 'cert*', 'misc*', '-misc-macro-parentheses', '-misc-unused-parameters', 'boost*', 'bugprone*', 'google*', 'modernize*']
 let g:ale_linters = {
             \   'python': ['mypy'],
             \   'rust': ['cargo'],
