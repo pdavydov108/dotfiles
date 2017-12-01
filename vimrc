@@ -121,7 +121,6 @@ Plug 'airblade/vim-gitgutter'
 " Plug 'pdavydov108/ensime-vim', {'for': ['scala', 'java']}
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'sjl/badwolf'
 " Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'Yggdroot/vim-mark'
 Plug 'tweekmonster/braceless.vim', { 'for': 'python' }
