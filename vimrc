@@ -99,13 +99,13 @@ Plug 'rhysd/vim-clang-format', {'for': ['c','cpp']}
 Plug 'xolox/vim-misc', {'for': 'lua'}
 Plug 'xolox/vim-lua-ftplugin', {'for': 'lua'}
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer --racer-completer'} ", 'for': ['c', 'cpp', 'python', 'go', 'rust', 'java', 'scala'] }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer', 'for': ['c', 'cpp', 'rust', 'python', 'go', 'java', 'scala'] }
 " autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
 Plug 'bling/vim-airline'
 Plug 'haya14busa/is.vim'
 " Plugin 'Shougo/unite.vim'
 Plug 'bruno-/vim-man', { 'on': 'Man' }
-Plug 'lyuts/vim-rtags', {'for': ['c','cpp']}
+" Plug 'lyuts/vim-rtags', {'for': ['c','cpp']}
 " Plugin 'jpalardy/vim-slime'
 Plug 'tmux-plugins/vim-tmux'
 Plug 'christoomey/vim-tmux-navigator'
@@ -136,7 +136,14 @@ Plug 'morhetz/gruvbox'
 Plug 'timonv/vim-cargo'
 Plug 'mbbill/undotree'
 " Plug 'neomake/neomake'
-Plug 'w0rp/ale', {'for': ['rust', 'vim', 'cpp']}
+Plug 'w0rp/ale', {'for': ['rust', 'vim']}
+" Rust RLS support
+Plug 'prabirshrestha/async.vim', {'for': ['rust', 'cpp', 'c', 'python']}
+" Plug 'prabirshrestha/vim-lsp', {'for': ['rust', 'cpp', 'c', 'python']}
+Plug 'pdavydov108/vim-lsp', {'for': ['rust', 'cpp', 'c', 'python']}
+Plug 'pdavydov108/vim-lsp-cquery', {'for': ['cpp', 'c']}
+" Plug 'prabirshrestha/asyncomplete.vim', {'for': ['rust', 'cpp']}
+" Plug 'prabirshrestha/asyncomplete-lsp.vim', {'for': ['rust', 'cpp']}
 
 call plug#end()
 
@@ -161,14 +168,12 @@ let g:ycm_autoclose_preview_window_after_insertion=1
 let g:ycm_confirm_extra_conf = 0
 let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py'
 let g:ycm_rust_src_path = '/home/pablo/rust/rust-git/src'
-autocmd FileType c,cc,cpp,cxx,h,hpp noremap <Leader>t :YcmCompleter GetType<CR>
 autocmd FileType c,cc,cpp,cxx,h,hpp noremap <Leader>fx :YcmCompleter FixIt<CR>
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
 
-autocmd FileType python nnoremap <leader>jj :YcmCompleter GoTo<CR>
+"autocmd FileType python nnoremap <leader>jj :YcmCompleter GoTo<CR>
 autocmd FileType python nnoremap <leader>gd  :YcmCompleter GetDoc<CR>
 let g:ycm_python_binary_path = '/usr/bin/python3'
-autocmd FileType rust nnoremap <leader>jj :YcmCompleter GoTo<CR>
 
 
 
@@ -212,7 +217,8 @@ nnoremap <Leader>cf :Autoformat<CR>
 " autocmd FileType c,cc,cpp,cxx,h,hpp vnoremap <buffer><Leader>cf :ClangFormat<CR>
 
 """ rtags
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <silent> <leader>jj :call rtags#JumpTo(g:SAME_WINDOW)<CR>
+" autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <silent> <leader>jj :call rtags#JumpTo(g:SAME_WINDOW)<CR>
+" autocmd FileType c,cpp,h,hpp nnoremap <leader>jj :LspDefinition<CR>
 
 """ man
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <S-k>  :Man <C-r><C-w><CR>
@@ -373,7 +379,7 @@ let g:ale_sign_error = '✗'
 let g:ale_sign_warning = '‼'
 let g:ale_set_quickfix = 0
 let g:ale_set_loclist = 0
-let g:ale_cpp_clangtidy_executable = 'clang-tidy-6.0'
+let g:ale_cpp_clangtidy_executable = 'clang-tidy-5.0'
 let g:ale_cpp_clangtidy_checks = ['-google-readability*', '-llvm-include-order*', '-readability-implicit-bool-cast', 'performance*', 'cppcoreguidelines*', '-cppcoreguidelines-pro-bounds-array-to-pointer-decay', '-cppcoreguidelines-special-member-functions', 'cert*', 'misc*', '-misc-macro-parentheses', '-misc-unused-parameters', 'boost*', 'bugprone*', 'google*', 'modernize*']
 let g:ale_linters = {
             \   'python': ['mypy'],
@@ -383,3 +389,42 @@ let g:ale_linters = {
             \}
 nmap <silent> <leader>k <Plug>(ale_previous_wrap)
 nmap <silent> <leader>j <Plug>(ale_next_wrap)
+
+" rust RLS config
+if executable('rls')
+    au User lsp_setup call lsp#register_server({
+            \ 'name': 'rls',
+            \ 'cmd': {server_info->['rustup', 'run', 'nightly', 'rls']},
+            \ 'whitelist': ['rust'],
+            \ })
+endif
+" cpp cquery config
+let g:pablo_cquery_bin = '/home/pablo/cquery/build/release/bin/cquery'
+if executable(g:pablo_cquery_bin)
+   au User lsp_setup call lsp#register_server({
+         \ 'name': 'cquery',
+         \ 'cmd': {server_info->[g:pablo_cquery_bin]},
+         \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
+         \ 'initialization_options': { 'cacheDirectory': '/code/cquery', 'cacheFormat': 'msgpack' },
+         \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
+         \ })
+endif
+" python language server config
+if executable('pyls')
+    au User lsp_setup call lsp#register_server({
+            \ 'name': 'pyls',
+            \ 'cmd': {server_info->['pyls']},
+            \ 'whitelist': ['python'],
+            \ })
+endif
+autocmd FileType c,cc,cpp,cxx,h,hpp,rust nnoremap <Leader>t :LspHover<CR>
+autocmd FileType c,cpp,h,hpp,rust nnoremap <leader>rf :LspReferences<CR>
+autocmd FileType c,cpp,h,hpp nnoremap <leader>rv :LspCqueryDerived<CR>
+autocmd FileType c,cpp,h,hpp,rust,python nnoremap <leader>jj :LspDefinition<CR>
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
+let g:lsp_log_file = expand('~/vim-lsp.log')
+" let g:asyncomplete_auto_popup = 1
+let g:lsp_async_completion = 0
+autocmd FileType rust setlocal omnifunc=lsp#complete
