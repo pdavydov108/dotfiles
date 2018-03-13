@@ -99,7 +99,7 @@ Plug 'rhysd/vim-clang-format', {'for': ['c','cpp']}
 Plug 'xolox/vim-misc', {'for': 'lua'}
 Plug 'xolox/vim-lua-ftplugin', {'for': 'lua'}
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer', 'for': ['c', 'cpp', 'rust', 'python', 'go', 'java', 'scala'] }
+" Plug 'Valloric/YouCompleteMe', { 'do': './install.py', 'for': ['c', 'cpp', 'rust', 'python', 'go', 'java', 'scala'] }
 " autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
 Plug 'bling/vim-airline'
 Plug 'haya14busa/is.vim'
@@ -129,21 +129,18 @@ Plug 'KabbAmine/yowish.vim'
 Plug 'cespare/vim-toml'
 " Plug 'DoxygenToolkit.vim'
 Plug 'Chiel92/vim-autoformat'
-" Plug 'jeaye/color_coded', { 'do': 'cmake . && make && make install', 'for': ['c', 'cpp']}
-" Plug 'scrooloose/syntastic', { 'for': 'scala' }
-" Plug 'erekwyatt/vim-sbt', { 'for': 'sbt' }
 Plug 'morhetz/gruvbox'
 Plug 'timonv/vim-cargo'
 Plug 'mbbill/undotree'
 " Plug 'neomake/neomake'
-Plug 'w0rp/ale', {'for': ['rust', 'vim']}
+Plug 'w0rp/ale', {'for': ['vim']}
 " Rust RLS support
-Plug 'prabirshrestha/async.vim', {'for': ['rust', 'cpp', 'c', 'python']}
+Plug 'prabirshrestha/async.vim'
 " Plug 'prabirshrestha/vim-lsp', {'for': ['rust', 'cpp', 'c', 'python']}
-Plug 'pdavydov108/vim-lsp', {'for': ['rust', 'cpp', 'c', 'python']}
+Plug 'pdavydov108/vim-lsp' ", {'for': ['rust', 'cpp', 'c', 'python']}
 Plug 'pdavydov108/vim-lsp-cquery', {'for': ['cpp', 'c']}
-" Plug 'prabirshrestha/asyncomplete.vim', {'for': ['rust', 'cpp']}
-" Plug 'prabirshrestha/asyncomplete-lsp.vim', {'for': ['rust', 'cpp']}
+Plug 'prabirshrestha/asyncomplete.vim' ", {'for': ['rust', 'cpp', 'c']}
+Plug 'prabirshrestha/asyncomplete-lsp.vim' ", {'for': ['rust', 'cpp', 'c']}
 
 call plug#end()
 
@@ -166,13 +163,13 @@ nmap <F6> :NERDTreeToggle<CR>
 let g:ycm_autoclose_preview_window_after_completion=1
 let g:ycm_autoclose_preview_window_after_insertion=1
 let g:ycm_confirm_extra_conf = 0
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py'
-let g:ycm_rust_src_path = '/home/pablo/rust/rust-git/src'
-autocmd FileType c,cc,cpp,cxx,h,hpp noremap <Leader>fx :YcmCompleter FixIt<CR>
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
+" let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/cpp/ycm/.ycm_extra_conf.py'
+" let g:ycm_rust_src_path = '/home/pablo/rust/rust-git/src'
+" autocmd FileType c,cc,cpp,cxx,h,hpp noremap <Leader>fx :YcmCompleter FixIt<CR>
+" autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
 
 "autocmd FileType python nnoremap <leader>jj :YcmCompleter GoTo<CR>
-autocmd FileType python nnoremap <leader>gd  :YcmCompleter GetDoc<CR>
+" Jautocmd FileType python nnoremap <leader>gd  :YcmCompleter GetDoc<CR>
 let g:ycm_python_binary_path = '/usr/bin/python3'
 
 
@@ -196,14 +193,6 @@ set noshowmode
 let g:UltiSnipsExpandTrigger="<c-b>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-
-""" ctrl-p
-" let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
-let g:ctrlp_extensions = ['line', 'buffer']
-set wildignore+=*/tmp/*,*/Debug/*,*/Release/*,*/MinSizeRel/*,*/build/*,*/target/*,*.so,*.swp,*.zip,*.jar,*.class,*.o
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-nnoremap <Leader>fU :execute 'CtrlPFunky ' . expand('<cword>')<CR>
 
 """ vim autoformat
 let g:formatterpath = ['/home/pablo/llvm/build/bin/']
@@ -398,6 +387,14 @@ if executable('rls')
             \ 'whitelist': ['rust'],
             \ })
 endif
+" cpp clangd config
+" if executable('clangd-6.0')
+"     au User lsp_setup call lsp#register_server({
+"             \ 'name': 'clangd',
+"             \ 'cmd': {server_info->['clangd-6.0']},
+"             \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
+"             \ })
+" endif
 " cpp cquery config
 let g:pablo_cquery_bin = '/home/pablo/cquery/build/release/bin/cquery'
 if executable(g:pablo_cquery_bin)
@@ -417,14 +414,19 @@ if executable('pyls')
             \ 'whitelist': ['python'],
             \ })
 endif
-autocmd FileType c,cc,cpp,cxx,h,hpp,rust nnoremap <Leader>t :LspHover<CR>
-autocmd FileType c,cpp,h,hpp,rust nnoremap <leader>rf :LspReferences<CR>
-autocmd FileType c,cpp,h,hpp nnoremap <leader>rv :LspCqueryDerived<CR>
-autocmd FileType c,cpp,h,hpp,rust,python nnoremap <leader>jj :LspDefinition<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp,rust,python nnoremap <leader>t :LspHover<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp,rust,python nnoremap <leader>fr :LspReferences<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fv :LspCqueryDerived<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp,rust,python nnoremap <leader>jj :LspDefinition<CR>
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
-let g:lsp_log_file = expand('~/vim-lsp.log')
-" let g:asyncomplete_auto_popup = 1
-let g:lsp_async_completion = 0
-autocmd FileType rust setlocal omnifunc=lsp#complete
+" let g:lsp_log_file = expand('~/vim-lsp.log')
+" let g:asyncomplete_log_file = expand('~/asyncomplete.log')
+let g:lsp_signs_enabled = 1
+let g:lsp_diagnostics_echo_cursor = 1
+let g:asyncomplete_auto_popup = 1
+let g:lsp_async_completion = 1
+let g:asyncomplete_min_chars = 3
+let g:asyncomplete_smart_completion = 0
+" autocmd FileType c,cc,cpp,cxx,h,hpp,rust,python setlocal omnifunc=lsp#complete
