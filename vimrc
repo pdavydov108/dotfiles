@@ -23,6 +23,7 @@ set ruler		" show the cursor position all the time
 set showcmd		" display incomplete commands
 set incsearch		" do incremental searching
 set smartcase
+set shortmess+=c " disable 'pattern not found' messages for autocomplete
 
 " In many terminal emulators the mouse works just fine, thus enable it.
 set mouse=
@@ -98,8 +99,7 @@ Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'rhysd/vim-clang-format', {'for': ['c','cpp']}
 Plug 'xolox/vim-misc', {'for': 'lua'}
 Plug 'xolox/vim-lua-ftplugin', {'for': 'lua'}
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-" Plug 'Valloric/YouCompleteMe', { 'do': './install.py', 'for': ['c', 'cpp', 'rust', 'python', 'go', 'java', 'scala'] }
+" Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer'}
 " autocmd! User YouCompleteMe if !has('vim_starting') | call youcompleteme#Enable() | endif
 Plug 'bling/vim-airline'
 Plug 'haya14busa/is.vim'
@@ -133,14 +133,24 @@ Plug 'morhetz/gruvbox'
 Plug 'timonv/vim-cargo'
 Plug 'mbbill/undotree'
 " Plug 'neomake/neomake'
-Plug 'w0rp/ale', {'for': ['vim']}
+Plug 'w0rp/ale', {'for': ['vim', 'python']}
 " Rust RLS support
 Plug 'prabirshrestha/async.vim'
 " Plug 'prabirshrestha/vim-lsp', {'for': ['rust', 'cpp', 'c', 'python']}
-Plug 'pdavydov108/vim-lsp' ", {'for': ['rust', 'cpp', 'c', 'python']}
+Plug 'Shougo/neco-syntax'
+Plug 'Shougo/neco-vim'
+Plug 'pdavydov108/vim-lsp' , {'branch': 'flickering'}
 Plug 'pdavydov108/vim-lsp-cquery', {'for': ['cpp', 'c']}
 Plug 'prabirshrestha/asyncomplete.vim' ", {'for': ['rust', 'cpp', 'c']}
 Plug 'prabirshrestha/asyncomplete-lsp.vim' ", {'for': ['rust', 'cpp', 'c']}
+Plug 'prabirshrestha/asyncomplete-necosyntax.vim'
+Plug 'prabirshrestha/asyncomplete-necovim.vim'
+Plug 'prabirshrestha/asyncomplete-buffer.vim'
+Plug 'prabirshrestha/asyncomplete-file.vim'
+if has('python3')
+    Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+    Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
+endif
 
 call plug#end()
 
@@ -151,9 +161,6 @@ set tags=./tags;/
 
 set wildignore+=*/tmp/*,*/Debug/*,*/Release/*,*/MinSizeRel/*,*/build/*,*/target/*,*.so,*.swp,*.zip,*.jar,*.class,*.o
 " let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-
-""" tagbar
-nmap <F8> :TagbarToggle<CR>
 
 """ nerdtree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
@@ -194,6 +201,19 @@ let g:UltiSnipsExpandTrigger="<c-b>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 
+let g:UltiSnipsExpandTrigger = "<nop>"
+let g:ulti_expand_or_jump_res = 0
+function ExpandSnippetOrCarriageReturn()
+    let l:snippet = UltiSnips#ExpandSnippetOrJump()
+    if g:ulti_expand_or_jump_res > 0
+        return l:snippet
+    else
+        return "\<CR>"
+    endif
+endfunction
+
+inoremap <expr> <CR> pumvisible() ? "<C-R>=ExpandSnippetOrCarriageReturn()<CR>" : "\<CR>"
+
 """ vim autoformat
 let g:formatterpath = ['/home/pablo/llvm/build/bin/']
 let g:autoformat_remove_trailing_spaces = 1
@@ -221,18 +241,6 @@ colorscheme gruvbox
 
 """ vim2hs
 set nofoldenable " disable folding
-
-""" syntastic
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
-
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 1
-" let g:syntastic_check_on_open = 1
-" let g:syntastic_check_on_wq = 0
-" let g:syntastic_cpp_compiler_options = "-std=c++11"
-" let g:syntastic_cppcheck_config_file = "Debug/compile_commands.json"
 
 """ some pain =)
 map <Up> <Nop>
@@ -276,9 +284,18 @@ nnoremap <leader>ff :FZF<CR>
 nnoremap <Leader>fj :BLines<CR>
 nnoremap <Leader>fJ :Lines<CR>
 nnoremap <Leader>fb :Buffers<CR>
-nnoremap <Leader>fa :Ag 
 
 command! RcSearch call fzf#run({'source': 'rc -S', 'sink': 'botright split'})
+
+command! -bang -nargs=* Rg
+            \ call fzf#vim#grep(
+            \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+            \   <bang>0 ? fzf#vim#with_preview('up:60%')
+            \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+            \   <bang>0)
+
+nnoremap <Leader>rg :Rg
+
 
 """ braceless python
 autocmd FileType python BracelessEnable +indent
@@ -296,34 +313,34 @@ autocmd FileType python BracelessEnable +indent
 " let g:syntastic_cppcheck_config_file = "Debug/compile_commands.json"
 
 """ open class
-function! ProcessResult(result) 
-  try
-    let args = {'F': '"'.a:result.'"'}
-    let results = rtags#ExecuteRC(args)
-    let loc = rtags#parseSourceLocation(results[0])
-    call rtags#jumpToLocation(loc[0], loc[1], loc[2])
-  catch 
-    echo v:exception
-endfunction
-
-function! RtagsSelectProject(result) 
-  try
-    let args = {'w': '"'.a:result.'"'}
-    call rtags#ExecuteRC(args)
-  catch 
-    echo v:exception
-endfunction
+" function! ProcessResult(result) 
+"   try
+"     let args = {'F': '"'.a:result.'"'}
+"     let results = rtags#ExecuteRC(args)
+"     let loc = rtags#parseSourceLocation(results[0])
+"     call rtags#jumpToLocation(loc[0], loc[1], loc[2])
+"   catch 
+"     echo v:exception
+" endfunction
+" 
+" function! RtagsSelectProject(result) 
+"   try
+"     let args = {'w': '"'.a:result.'"'}
+"     call rtags#ExecuteRC(args)
+"   catch 
+"     echo v:exception
+" endfunction
 
 " , 'options': '--expect=ctrl-t,ctrl-v,ctrl-x'
 
 """ rtags and fzf integration
-command! -nargs=0 FClass call fzf#run({'source': 'rc -S class', 'down': '40%', 'sink': function('ProcessResult')}) 
-command! -nargs=0 FSymbol call fzf#run({'source': 'rc -S', 'down': '40%', 'sink': function('ProcessResult')}) 
-command! -nargs=0 FProject call fzf#run({'source': 'rc -w', 'down': '40%', 'sink': function('RtagsSelectProject')}) 
-nnoremap <leader>rc :FClass<CR>
-nnoremap <leader>rm :FSymbol<CR>
-nnoremap <leader>rP :FProject<CR>
-set shell=/bin/bash
+" command! -nargs=0 FClass call fzf#run({'source': 'rc -S class', 'down': '40%', 'sink': function('ProcessResult')}) 
+" command! -nargs=0 FSymbol call fzf#run({'source': 'rc -S', 'down': '40%', 'sink': function('ProcessResult')}) 
+" command! -nargs=0 FProject call fzf#run({'source': 'rc -w', 'down': '40%', 'sink': function('RtagsSelectProject')}) 
+" nnoremap <leader>rc :FClass<CR>
+" nnoremap <leader>rm :FSymbol<CR>
+" nnoremap <leader>rP :FProject<CR>
+" set shell=/bin/bash
 
 """ Doxygen
 autocmd FileType c,cc,cpp,cxx,h,hpp noremap <Leader>dx :Dox<CR>
@@ -349,8 +366,8 @@ set termguicolors
 set number
 set cursorline
 set relativenumber
-hi cursorline cterm=none ctermbg=none
-hi cursorlinenr ctermfg=red
+"hi cursorline cterm=none ctermbg=none
+"hi cursorlinenr ctermfg=red
 
 let g:gruvbox_contrast_dark="hard"
 
@@ -402,7 +419,7 @@ if executable(g:pablo_cquery_bin)
          \ 'name': 'cquery',
          \ 'cmd': {server_info->[g:pablo_cquery_bin]},
          \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-         \ 'initialization_options': { 'cacheDirectory': '/code/cquery', 'cacheFormat': 'msgpack' },
+         \ 'initialization_options': { 'cacheDirectory': '/home/pablo/.cquery', 'cacheFormat': 'msgpack' },
          \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
          \ })
 endif
@@ -414,19 +431,56 @@ if executable('pyls')
             \ 'whitelist': ['python'],
             \ })
 endif
+
+" asyncomplete setup
+au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#necosyntax#get_source_options({
+    \ 'name': 'necosyntax',
+    \ 'whitelist': ['*'],
+    \ 'completor': function('asyncomplete#sources#necosyntax#completor'),
+    \ }))
+
+au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
+    \ 'name': 'file',
+    \ 'whitelist': ['*'],
+    \ 'priority': 10,
+    \ 'completor': function('asyncomplete#sources#file#completor')
+    \ }))
+
+call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
+    \ 'name': 'buffer',
+    \ 'whitelist': ['*'],
+    \ 'blacklist': ['go'],
+    \ 'completor': function('asyncomplete#sources#buffer#completor'),
+    \ }))
+
+if has('python3')
+    call asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
+            \ 'name': 'ultisnips',
+            \ 'whitelist': ['*'],
+            \ 'completor': function('asyncomplete#sources#ultisnips#completor'),
+            \ }))
+endif
+
+highlight link LspErrorText GruvboxRedSign
+highlight link LspWarningText GruvboxYellowSign
 autocmd FileType c,cc,cpp,cxx,h,hpp,rust,python nnoremap <leader>t :LspHover<CR>
 autocmd FileType c,cc,cpp,cxx,h,hpp,rust,python nnoremap <leader>fr :LspReferences<CR>
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fv :LspCqueryDerived<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fc :LspCqueryCallers<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fb :LspCqueryBase<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fi :LspCqueryVars<CR>
 autocmd FileType c,cc,cpp,cxx,h,hpp,rust,python nnoremap <leader>jj :LspDefinition<CR>
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
-" let g:lsp_log_file = expand('~/vim-lsp.log')
+" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
+let g:lsp_log_file = expand('~/vim-lsp.log')
 " let g:asyncomplete_log_file = expand('~/asyncomplete.log')
 let g:lsp_signs_enabled = 1
+let g:lsp_signs_error = {'text': '✗'}
+let g:lsp_signs_warning = {'text': '‼'}
 let g:lsp_diagnostics_echo_cursor = 1
 let g:asyncomplete_auto_popup = 1
 let g:lsp_async_completion = 1
 let g:asyncomplete_min_chars = 3
-let g:asyncomplete_smart_completion = 0
+let g:asyncomplete_smart_completion = 1
 " autocmd FileType c,cc,cpp,cxx,h,hpp,rust,python setlocal omnifunc=lsp#complete
