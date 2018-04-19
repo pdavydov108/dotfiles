@@ -42,7 +42,8 @@ au BufRead * if search('\M-*- C++ -*-', 'nw', 1) | setlocal ft=cpp | endif
 " Use the default filetype settings, so that mail gets 'tw' set to 72,
 " 'cindent' is on in C files, etc.
 " Also load indent files, to automatically do language-dependent indenting.
-filetype plugin indent on
+" filetype plugin indent on
+filetype off
 
 " For all text files set 'textwidth' to 78 characters.
 autocmd FileType text setlocal textwidth=78
@@ -134,6 +135,8 @@ endif
 
 call plug#end()
 
+filetype plugin indent on
+
 set noeb vb t_vb=
 set vb
 set nobackup
@@ -152,12 +155,11 @@ set laststatus=2
 set noshowmode
 
 """ ultisnips
-let g:UltiSnipsSnippetDirectories=["~/dotfiles/ultisnips"]
+let g:UltiSnipsSnippetDirectories=[$HOME . "/dotfiles/ultisnips"]
 let g:UltiSnipsExpandTrigger="<c-b>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 
-" let g:UltiSnipsExpandTrigger = "<nop>"
 let g:ulti_expand_or_jump_res = 0
 function ExpandSnippetOrCarriageReturn()
     let l:snippet = UltiSnips#ExpandSnippetOrJump()
@@ -169,6 +171,7 @@ function ExpandSnippetOrCarriageReturn()
 endfunction
 
 inoremap <expr> <CR> pumvisible() ? "<C-R>=ExpandSnippetOrCarriageReturn()<CR>" : "\<CR>"
+inoremap <expr> <tab> pumvisible() ? <C-n> : <tab>
 
 """ vim autoformat
 let g:formatterpath = ['/home/pablo/llvm/build/bin/']

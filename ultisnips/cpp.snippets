@@ -1,0 +1,17 @@
+snippet inc "Include header"
+#include <${0:vector}>
+endsnippet
+
+snippet nm "namespace"
+namespace $1 {
+$0
+}
+endsnippet
+
+snippet fmt "fmt format function"
+fmt::format("$1", $2)$3
+endsnippet
+
+snippet thr "throw runtime error"
+throw std::runtime_error($1)$2
+endsnippet
