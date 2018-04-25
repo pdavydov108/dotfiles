@@ -42,8 +42,7 @@ au BufRead * if search('\M-*- C++ -*-', 'nw', 1) | setlocal ft=cpp | endif
 " Use the default filetype settings, so that mail gets 'tw' set to 72,
 " 'cindent' is on in C files, etc.
 " Also load indent files, to automatically do language-dependent indenting.
-" filetype plugin indent on
-filetype off
+filetype plugin indent on
 
 " For all text files set 'textwidth' to 78 characters.
 autocmd FileType text setlocal textwidth=78
@@ -88,6 +87,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-tbone'
 Plug 'tpope/vim-projectionist'
+Plug 'tpope/vim-markdown'
 Plug 'ryanoasis/vim-devicons' " TODO : patch fonts
 Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
@@ -134,8 +134,6 @@ if has('python3')
 endif
 
 call plug#end()
-
-filetype plugin indent on
 
 set noeb vb t_vb=
 set vb
@@ -215,6 +213,9 @@ nnoremap <leader>wa :wa<CR>
 nnoremap <leader>wq <c-w>q
 nnoremap <leader>wo <c-w>o
 nnoremap <leader>wv <c-w>v
+
+""" markdown
+let g:markdown_fenced_languages = ['cpp', 'rust', 'vim', 'python']
 
 """ enable persistent undo check
 set undofile                " Save undo's after file closes
@@ -362,3 +363,4 @@ let g:asyncomplete_auto_popup = 1
 let g:lsp_async_completion = 1
 " let g:asyncomplete_min_chars = 3
 let g:asyncomplete_smart_completion = 1
+autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
