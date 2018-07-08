@@ -1,5 +1,5 @@
 # antigen
-source ~/.antigen.zsh
+source ~/antigen.zsh
 
 # antigen plugins
 antigen use oh-my-zsh
@@ -28,7 +28,10 @@ antigen bundle vagrant
 antigen bundle web-search
 antigen bundle colored-man-pages
 antigen bundle skroll/zsh-cmake-completion
+antigen bundle pkulev/zsh-rustup-completion
 #antigen bundle zsh-completions
+
+antigen theme robbyrussell
 
 antigen apply
 
@@ -148,5 +151,4 @@ ftpane() {
 
 export _JAVA_OPTIONS="-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel"
 export PATH=$PATH:$HOME/.cargo/bin
-
-antigen theme robbyrussell
+export PATH=$PATH:$HOME/.local/bin
