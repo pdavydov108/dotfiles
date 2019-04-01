@@ -1,4 +1,4 @@
-" 
+"
 " My personal vim configuration
 " pdavydov108@gmail.com
 "
@@ -18,15 +18,17 @@ set nocompatible
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
-set history=50		" keep 50 lines of command line history
-set ruler		" show the cursor position all the time
-set showcmd		" display incomplete commands
-set incsearch		" do incremental searching
+set history=50      " keep 50 lines of command line history
+set ruler       " show the cursor position all the time
+set showcmd     " display incomplete commands
+set incsearch       " do incremental searching
 set smartcase
 set shortmess+=c " disable 'pattern not found' messages for autocomplete
 
 " In many terminal emulators the mouse works just fine, thus enable it.
-set mouse=
+set mouse=a
+" Make vim recognise scrolling, even through ssh.
+set ttymouse=xterm2
 
 set ts=4
 set sw=4
@@ -51,9 +53,9 @@ autocmd FileType text setlocal textwidth=78
 " Don't do it when the position is invalid or when inside an event handler
 " (happens when dropping a file on gvim).
 autocmd BufReadPost *
-      \ if line("'\"") > 0 && line("'\"") <= line("$") |
-      \   exe "normal! g`\"" |
-      \ endif
+            \ if line("'\"") > 0 && line("'\"") <= line("$") |
+            \   exe "normal! g`\"" |
+            \ endif
 
 set fileencodings=utf-8,cp1251,koi8-r,cp866
 
@@ -70,9 +72,9 @@ set ffs=unix,dos
 
 " automatically download vim plug if it is not installed
 if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall | source $MYVIMRC
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+                \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall | source $MYVIMRC
 endif
 
 call plug#begin('~/.vim/bundle')
@@ -88,6 +90,7 @@ Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-tbone'
 Plug 'tpope/vim-projectionist'
 Plug 'tpope/vim-markdown'
+Plug 'wellle/targets.vim'
 Plug 'ryanoasis/vim-devicons' " TODO : patch fonts
 Plug 'derekwyatt/vim-scala', { 'for': 'scala' }
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
@@ -115,23 +118,14 @@ Plug 'Chiel92/vim-autoformat'
 Plug 'morhetz/gruvbox'
 Plug 'timonv/vim-cargo'
 Plug 'mbbill/undotree'
-Plug 'prabirshrestha/async.vim'
-" Plug 'prabirshrestha/vim-lsp', {'for': ['rust', 'cpp', 'c', 'python']}
 Plug 'Shougo/neco-syntax'
 Plug 'Shougo/neco-vim'
-Plug 'pdavydov108/vim-lsp' , {'branch': 'flickering'}
-Plug 'pdavydov108/vim-lsp-cquery', {'for': ['cpp', 'c']}
-Plug 'prabirshrestha/asyncomplete.vim' ", {'for': ['rust', 'cpp', 'c']}
-Plug 'prabirshrestha/asyncomplete-lsp.vim' ", {'for': ['rust', 'cpp', 'c']}
-Plug 'prabirshrestha/asyncomplete-necosyntax.vim'
-Plug 'prabirshrestha/asyncomplete-necovim.vim'
-Plug 'prabirshrestha/asyncomplete-buffer.vim'
-Plug 'prabirshrestha/asyncomplete-file.vim'
 if has('python3')
-    Plug 'SirVer/ultisnips' 
+    Plug 'SirVer/ultisnips'
     Plug 'honza/vim-snippets'
     Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
 endif
+Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 
 call plug#end()
 
@@ -139,8 +133,6 @@ set noeb vb t_vb=
 set vb
 set nobackup
 set tags=./tags;/
-
-" set wildignore+=*/tmp/*,*/Debug/*,*/Release/*,*/MinSizeRel/*,*/build/*,*/target/*,*.so,*.swp,*.zip,*.jar,*.class,*.o
 
 """ nerdtree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
@@ -151,6 +143,8 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 set laststatus=2
 set noshowmode
+let g:airline_section_error = '%{airline#util#wrap(airline#extensions#coc#get_error(),0)}'
+let g:airline_section_warning = '%{airline#util#wrap(airline#extensions#coc#get_warning(),0)}'
 
 """ ultisnips
 let g:UltiSnipsSnippetDirectories=[$HOME . "/dotfiles/ultisnips"]
@@ -182,7 +176,7 @@ autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <S-k>  :Man <C-r><C-w><CR>
 
 """ colorscheme
 set background=dark
-colorscheme gruvbox 
+colorscheme gruvbox
 
 """ some pain =)
 map <Up> <Nop>
@@ -276,91 +270,33 @@ autocmd FileType rust nnoremap <leader>mk :CargoBuild<CR>
 """ undotree
 nnoremap <leader>ut :UndotreeToggle<CR>
 
-" rust RLS config
-if executable('rls')
-    au User lsp_setup call lsp#register_server({
-            \ 'name': 'rls',
-            \ 'cmd': {server_info->['rustup', 'run', 'nightly', 'rls']},
-            \ 'whitelist': ['rust'],
-            \ })
-endif
-" cpp clangd config
-" if executable('clangd-6.0')
-"     au User lsp_setup call lsp#register_server({
-"             \ 'name': 'clangd',
-"             \ 'cmd': {server_info->['clangd-6.0']},
-"             \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
-"             \ })
-" endif
-" cpp cquery config
-let g:pablo_cquery_bin = '/home/pablo/cquery/build/release/bin/cquery'
-if executable(g:pablo_cquery_bin)
-   au User lsp_setup call lsp#register_server({
-         \ 'name': 'cquery',
-         \ 'cmd': {server_info->[g:pablo_cquery_bin]},
-         \ 'root_uri': {server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'compile_commands.json'))},
-         \ 'initialization_options': { 'cacheDirectory': '/home/pablo/.cquery', 'cacheFormat': 'msgpack' },
-         \ 'whitelist': ['c', 'cpp', 'objc', 'objcpp'],
-         \ })
-endif
-" python language server config
-if executable('pyls')
-    au User lsp_setup call lsp#register_server({
-            \ 'name': 'pyls',
-            \ 'cmd': {server_info->['pyls']},
-            \ 'whitelist': ['python'],
-            \ })
-endif
+highlight link CocErrorHighlight GruvboxRedSign
+highlight link CocWarnignHighlight GruvboxYellowSign
+" highlight link CocErrorSign GruvboxRedSign
+" highlight link CocErrorSign GruvboxYellowSign
+autocmd FileType c,cc,cpp,cxx,h,hpp,rust,python,javascript nnoremap <leader>t :LspHover<CR>
+nmap <leader>fr <Plug>(coc-references)
+nmap <leader>jj <Plug>(coc-definition)
+nmap <leader>fv <Plug>(coc-implementation)
+nmap <leader>ft <Plug>(coc-type-definition)
+nmap <leader>rn <Plug>(coc-rename)
+nmap <leader>fx <Plug>(coc-fix-current)
+nmap <leader>di <Plug>(coc-diagnostic-info)
+vmap <leader>fs  <Plug>(coc-format-selected)
+nmap <leader>fs  <Plug>(coc-format-selected)
+nnoremap <leader>sd :call <SID>show_documentation()<CR>
 
-" asyncomplete setup
-au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#necosyntax#get_source_options({
-    \ 'name': 'necosyntax',
-    \ 'whitelist': ['*'],
-    \ 'completor': function('asyncomplete#sources#necosyntax#completor'),
-    \ }))
-
-au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
-    \ 'name': 'file',
-    \ 'whitelist': ['*'],
-    \ 'priority': 10,
-    \ 'completor': function('asyncomplete#sources#file#completor')
-    \ }))
-
-call asyncomplete#register_source(asyncomplete#sources#buffer#get_source_options({
-    \ 'name': 'buffer',
-    \ 'whitelist': ['*'],
-    \ 'blacklist': ['go'],
-    \ 'completor': function('asyncomplete#sources#buffer#completor'),
-    \ }))
-
-if has('python3')
-    call asyncomplete#register_source(asyncomplete#sources#ultisnips#get_source_options({
-            \ 'name': 'ultisnips',
-            \ 'whitelist': ['*'],
-            \ 'completor': function('asyncomplete#sources#ultisnips#completor'),
-            \ }))
-endif
-
-highlight link LspErrorText GruvboxRedSign
-highlight link LspWarningText GruvboxYellowSign
-autocmd FileType c,cc,cpp,cxx,h,hpp,rust,python nnoremap <leader>t :LspHover<CR>
-autocmd FileType c,cc,cpp,cxx,h,hpp,rust,python nnoremap <leader>fr :LspReferences<CR>
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fv :LspCqueryDerived<CR>
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fc :LspCqueryCallers<CR>
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fp :LspCqueryBase<CR>
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fi :LspCqueryVars<CR>
-autocmd FileType c,cc,cpp,cxx,h,hpp,rust,python nnoremap <leader>jj :LspDefinition<CR>
+function! s:show_documentation()
+    if &filetype == 'vim'
+        execute 'h '.expand('<cword>')
+    else
+        call CocActionAsync('doHover')<CR>
+    endif
+endfunction
+autocmd CursorHold * silent call CocActionAsync('highlight')
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fc :call CocLocations('ccls', '$ccls/inheritance', {'derived':v:true})<cr>
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fp :call CocLocations('ccls', '$ccls/inheritance', {'derived':v:false})<cr>
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>fi :call CocLocations('ccls', '$ccls/vars', {'kind': 1})<cr>
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<cr>"
-let g:lsp_log_file = expand('~/vim-lsp.log')
-" let g:asyncomplete_log_file = expand('~/asyncomplete.log')
-let g:lsp_signs_enabled = 1
-let g:lsp_signs_error = {'text': '✗'}
-let g:lsp_signs_warning = {'text': '‼'}
-let g:lsp_diagnostics_echo_cursor = 1
-let g:asyncomplete_auto_popup = 1
-let g:lsp_async_completion = 1
-" let g:asyncomplete_min_chars = 3
-let g:asyncomplete_smart_completion = 1
-autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+" let g:lsp_signs_error = {'text': '✗'}
