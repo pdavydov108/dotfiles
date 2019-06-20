@@ -272,6 +272,7 @@ nnoremap <leader>ut :UndotreeToggle<CR>
 
 highlight link CocErrorHighlight GruvboxRedSign
 highlight link CocWarnignHighlight GruvboxYellowSign
+highlight link CocHighlightText GruvboxBlueSign
 " highlight link CocErrorSign GruvboxRedSign
 " highlight link CocErrorSign GruvboxYellowSign
 autocmd FileType c,cc,cpp,cxx,h,hpp,rust,python,javascript nnoremap <leader>t :LspHover<CR>
