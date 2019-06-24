@@ -1,39 +1,55 @@
-# antigen
-source ~/antigen.zsh
+# check if zplug is installed
+if [[ ! -d ~/.zplug ]]; then
+      git clone https://github.com/zplug/zplug ~/.zplug
+        source ~/.zplug/init.zsh && zplug update --self
+fi
 
-# antigen plugins
-antigen use oh-my-zsh
-antigen bundle jimmijj/zsh-syntax-highlighting
-antigen bundle rupa/z
-# source ~/.antigen/repos/https-COLON--SLASH--SLASH-github.com-SLASH-zsh-users-SLASH-zsh-history-substring-search.git/zsh-history-substring-search.zsh
+# load zplug
+source ~/.zplug/init.zsh
 
-antigen bundle zsh-users/zsh-history-substring-search
-# antigen bundle tarruda/zsh-autosuggestions
-antigen bundle zsh-users/zsh-completions src/
+zplug "jimmijj/zsh-syntax-highlighting", defer:2
+zplug "rupa/z", use:z.sh
+zplug "zsh-users/zsh-history-substring-search"
+zplug "tarruda/zsh-autosuggestions"
+zplug "zsh-users/zsh-completions", lazy:true
 
 # antigen oh-my-zsh features
-antigen bundle git
-antigen bundle pip
-antigen bundle python
-antigen bundle dnf
-antigen bundle git-extras
-antigen bundle jira
-antigen bundle pip
-antigen bundle sbt
-antigen bundle cargo 
-antigen bundle scala
-antigen bundle sudo
-antigen bundle systemd
-antigen bundle vagrant
-antigen bundle web-search
-antigen bundle colored-man-pages
-antigen bundle skroll/zsh-cmake-completion
-antigen bundle pkulev/zsh-rustup-completion
-#antigen bundle zsh-completions
+zplug "plugins/git", from:oh-my-zsh, lazy:true
+zplug "plugins/python", from:oh-my-zsh, lazy:true
+# zplug "plugins/dnf", from:oh-my-zsh, lazy:true
+zplug "plugins/git-extras", from:oh-my-zsh
+# zplug "plugins/jira", from:oh-my-zsh, lazy:true
+zplug "plugins/pip", from:oh-my-zsh, lazy:true
+# zplug "plugins/sbt", from:oh-my-zsh, lazy:true
+zplug "plugins/cargo", from:oh-my-zsh, lazy:true
+# zplug "plugins/scala", from:oh-my-zsh, lazy:true
+# zplug "plugins/sudo", from:oh-my-zsh, lazy:true
+zplug "plugins/systemd", from:oh-my-zsh, lazy:true
+zplug "plugins/vagrant", from:oh-my-zsh, lazy:true
+zplug "plugins/rsync", from:oh-my-zsh, lazy:true
+zplug "plugins/ubuntu", from:oh-my-zsh, lazy:true
+zplug "plugins/yarn", from:oh-my-zsh, lazy:true
+# zplug "plugins/web-search", from:oh-my-zsh, lazy:true
+# zplug "plugins/colored-man-pages", from:oh-my-zsh, lazy:true
+zplug "skroll/zsh-cmake-completion", lazy:true
+zplug "pkulev/zsh-rustup-completion", lazy:true
+zplug "themes/robbyrussell", from:oh-my-zsh, as:theme
+zplug "supercrabtree/k"
+zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 
-antigen theme robbyrussell
 
-antigen apply
+# Install packages that have not been installed yet
+if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    else
+        echo
+    fi
+fi
+
+# load plugins
+zplug load
 
 # completion
 autoload -U compinit
@@ -86,36 +102,36 @@ vo() {
 }
 
 # open class from last project, TODO
-vc() {
-  local class=($(rc -S class | fzf-tmux --select-1 --exit-0 --query="$1"))
-  local files=($(rc -F "${class}" --definition-only -K | head -n 1))
-  local file=($(echo "${files}" | sed 's/:.*//'))
-  local line=($(echo "${files}" | sed 's/.*:\([0-9]\+\):[0-9]\+.*/\1/'))
-  local offset=($(echo "${files}" | sed 's/.*:\([0-9]\+\):\([0-9]\+\).*/\2/'))
-  # echo ${files[@]}
-  # echo $file
-  # echo $line
-  # echo $offset
-  if [[ ! -z ${file} ]]; then
-    ${EDITOR:-vim} ${file} +$line
-  fi
-}
+# vc() {
+#   local class=($(rc -S class | fzf-tmux --select-1 --exit-0 --query="$1"))
+#   local files=($(rc -F "${class}" --definition-only -K | head -n 1))
+#   local file=($(echo "${files}" | sed 's/:.*//'))
+#   local line=($(echo "${files}" | sed 's/.*:\([0-9]\+\):[0-9]\+.*/\1/'))
+#   local offset=($(echo "${files}" | sed 's/.*:\([0-9]\+\):\([0-9]\+\).*/\2/'))
+#   # echo ${files[@]}
+#   # echo $file
+#   # echo $line
+#   # echo $offset
+#   if [[ ! -z ${file} ]]; then
+#     ${EDITOR:-vim} ${file} +$line
+#   fi
+# }
 
 # open class from last project, TODO
-vs() {
-  local class=($(rc -S --imenu | fzf-tmux --select-1 --exit-0 --query="$1"))
-  local files=($(rc -F "${class}" --definition-only -K | head -n 1))
-  local file=($(echo "${files}" | sed 's/:.*//'))
-  local line=($(echo "${files}" | sed 's/.*:\([0-9]\+\):[0-9]\+.*/\1/'))
-  local offset=($(echo "${files}" | sed 's/.*:\([0-9]\+\):\([0-9]\+\).*/\2/'))
-  # echo ${files[@]}
-  # echo $file
-  # echo $line
-  # echo $offset
-  if [[ ! -z ${file} ]]; then
-    ${EDITOR:-vim} ${file} +$line
-  fi
-}
+# vs() {
+#   local class=($(rc -S --imenu | fzf-tmux --select-1 --exit-0 --query="$1"))
+#   local files=($(rc -F "${class}" --definition-only -K | head -n 1))
+#   local file=($(echo "${files}" | sed 's/:.*//'))
+#   local line=($(echo "${files}" | sed 's/.*:\([0-9]\+\):[0-9]\+.*/\1/'))
+#   local offset=($(echo "${files}" | sed 's/.*:\([0-9]\+\):\([0-9]\+\).*/\2/'))
+#   # echo ${files[@]}
+#   # echo $file
+#   # echo $line
+#   # echo $offset
+#   if [[ ! -z ${file} ]]; then
+#     ${EDITOR:-vim} ${file} +$line
+#   fi
+# }
 
 # z integartion
 unalias z 2> /dev/null
@@ -149,6 +165,13 @@ ftpane() {
 # vim() { vimx --servername debug "$*"; }
 # vi() { vimx --servername debug "$*"; }
 
-export _JAVA_OPTIONS="-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel"
+export _JAVA_OPTIONS="-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel -Dsun.java2d.uiScale=2.0"
 export PATH=$PATH:$HOME/.cargo/bin
 export PATH=$PATH:$HOME/.local/bin
+export PATH=$PATH:/snap/bin
+
+SAVEHIST=1000
+HISTFILE=~/.zsh_history
+GCC_COLORS=1
+
+eval "$(keychain --eval --agents ssh,gpg)"
