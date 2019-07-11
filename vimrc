@@ -169,7 +169,6 @@ inoremap <expr> <tab> pumvisible() ? <C-n> : <tab>
 let g:formatterpath = ['/home/pablo/llvm/build/bin/']
 let g:autoformat_remove_trailing_spaces = 1
 let g:autoformat_retab = 1
-nnoremap <Leader>cf :Autoformat<CR>
 
 """ man
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <S-k>  :Man <C-r><C-w><CR>
@@ -284,7 +283,7 @@ nmap <leader>rn <Plug>(coc-rename)
 nmap <leader>fx <Plug>(coc-fix-current)
 nmap <leader>di <Plug>(coc-diagnostic-info)
 vmap <leader>fs  <Plug>(coc-format-selected)
-nmap <leader>fs  <Plug>(coc-format-selected)
+nmap <leader>cf  <Plug>(coc-format)
 nnoremap <leader>sd :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
