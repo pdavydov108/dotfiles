@@ -13,14 +13,8 @@
         "rls": {
             "command": "/home/pablo/.cargo/bin/rls",
             "filetypes": ["rust"]
-        },
-        "pyls": {
-            "command": "python3 -m pyls",
-            "filetypes": ["python"]
-        },
-        "javascript-lsp": {
-            "command": "node /home/pablo/javascript-typescript-langserver/lib/language-server-stdio",
-            "filetypes": ["js", "javascript", "typescript", "javascript.jsx"]
         }
-    }
+    },
+    "python.linting.mypyEnabled": true,
+    "tslint.jsEnable": true
 }
