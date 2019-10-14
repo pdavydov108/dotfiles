@@ -24,6 +24,8 @@ set showcmd     " display incomplete commands
 set incsearch       " do incremental searching
 set smartcase
 set shortmess+=c " disable 'pattern not found' messages for autocomplete
+set cmdheight=2 " shorter hover delay for coc
+set updatetime=300 " shorter hover delay for coc
 
 " In many terminal emulators the mouse works just fine, thus enable it.
 set mouse=a
@@ -283,7 +285,7 @@ nmap <leader>rn <Plug>(coc-rename)
 nmap <leader>fx <Plug>(coc-fix-current)
 nmap <leader>di <Plug>(coc-diagnostic-info)
 vmap <leader>fs  <Plug>(coc-format-selected)
-nmap <leader>cf  <Plug>(coc-format)
+nmap <leader>fs  <Plug>(coc-format)
 nnoremap <leader>sd :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
