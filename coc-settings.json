@@ -7,14 +7,14 @@
             "initializationOptions": {
                 "cache": {
                     "directory": "/home/pablo/.ccls"
+                },
+                "client": {
+                    "snippetSupport": true
                 }
             }
-        },
-        "rls": {
-            "command": "/home/pablo/.cargo/bin/rls",
-            "filetypes": ["rust"]
         }
     },
     "python.linting.mypyEnabled": true,
+    "python.linting.prospectorEnabled": true,
     "tslint.jsEnable": true
 }
