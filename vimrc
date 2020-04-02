@@ -3,7 +3,7 @@
 " pdavydov108@gmail.com
 "
 " remap leader
-let mapleader = "\<space>"
+let mapleader = ";"
 
 " enable terminal colors
 " set t_Co=256
@@ -122,6 +122,7 @@ Plug 'timonv/vim-cargo'
 Plug 'mbbill/undotree'
 Plug 'Shougo/neco-syntax'
 Plug 'Shougo/neco-vim'
+Plug 'Shirk/vim-gas'
 if has('python3')
     Plug 'SirVer/ultisnips'
     Plug 'honza/vim-snippets'
