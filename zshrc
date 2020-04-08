@@ -29,6 +29,7 @@ zplug "plugins/vagrant", from:oh-my-zsh, lazy:true
 zplug "plugins/rsync", from:oh-my-zsh, lazy:true
 zplug "plugins/ubuntu", from:oh-my-zsh, lazy:true
 zplug "plugins/yarn", from:oh-my-zsh, lazy:true
+zplug "plugins/poetry", from:oh-my-zsh, lazy:true
 # zplug "plugins/web-search", from:oh-my-zsh, lazy:true
 # zplug "plugins/colored-man-pages", from:oh-my-zsh, lazy:true
 zplug "skroll/zsh-cmake-completion", lazy:true
@@ -36,6 +37,8 @@ zplug "pkulev/zsh-rustup-completion", lazy:true
 zplug "themes/robbyrussell", from:oh-my-zsh, as:theme
 zplug "supercrabtree/k"
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+zplug "darvid/zsh-poetry"
+zplug "mattberther/zsh-pyenv"
 
 
 # Install packages that have not been installed yet
@@ -175,3 +178,7 @@ HISTFILE=~/.zsh_history
 GCC_COLORS=1
 
 eval "$(keychain --eval --agents ssh,gpg)"
+
+export PATH="/home/pablo/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
