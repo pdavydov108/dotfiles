@@ -129,6 +129,7 @@ if has('python3')
     Plug 'prabirshrestha/asyncomplete-ultisnips.vim'
 endif
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+Plug 'ntpeters/vim-better-whitespace'
 
 call plug#end()
 
@@ -272,9 +273,9 @@ autocmd FileType rust nnoremap <leader>mk :CargoBuild<CR>
 """ undotree
 nnoremap <leader>ut :UndotreeToggle<CR>
 
-highlight link CocErrorHighlight GruvboxRedSign
-highlight link CocWarnignHighlight GruvboxYellowSign
-highlight link CocHighlightText GruvboxBlueSign
+highlight! link CocErrorHighlight GruvboxRedSign
+highlight! link CocWarnignHighlight GruvboxYellowSign
+highlight! link CocHighlightText GruvboxBlueSign
 " highlight link CocErrorSign GruvboxRedSign
 " highlight link CocErrorSign GruvboxYellowSign
 autocmd FileType c,cc,cpp,cxx,h,hpp,rust,python,javascript nnoremap <leader>t :LspHover<CR>
