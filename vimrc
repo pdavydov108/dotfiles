@@ -197,10 +197,10 @@ inoremap jj <ESC>
 cnoremap jj <ESC>
 
 """ dispatch
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>mk :Dispatch<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>mk :Dispatch -compiler=make make -j -C Debug/ <CR>
 autocmd FileType rust nnoremap <leader>mk :Dispatch cargo build<CR>
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ct :Dispatch -compiler=make clang-tidy-6.0 -p Debug/  %:p<CR>
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ctf :Dispatch -compiler=make clang-tidy-6.0 -p Debug/ -fix-errors -fix %:p<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ct :Dispatch -compiler=make clang-tidy -p Debug/  %:p<CR>
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ctf :Dispatch -compiler=make clang-tidy -p Debug/ -fix-errors -fix %:p<CR>
 
 nnoremap <leader>aa :A<CR>
 nnoremap <leader>at :AT<CR>
