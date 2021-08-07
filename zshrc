@@ -14,7 +14,7 @@ if [[ ! -f $HOME/.local/bin/starship ]]; then
     command curl -fsSL https://starship.rs/install.sh > /tmp/starship_install.sh
     print -P "installing starship..."
     command chmod +x /tmp/starship_install.sh
-    command BIN_DIR=$HOME/.local/bin /tmp/starship_install.sh
+    command /tmp/starship_install.sh -b=$HOME/.local/bin/
     print -P "starship installed"
 fi
 eval "$(starship init zsh)"
