@@ -3,14 +3,14 @@
 # Any items in the `env` entry below will be added as
 # environment variables. Some entries may override variables
 # set by alacritty itself.
-#env:
+env:
   # TERM variable
   #
   # This value is used to set the `$TERM` environment variable for
   # each instance of Alacritty. If it is not present, alacritty will
   # check the local terminfo database and use `alacritty` if it is
   # available, otherwise `xterm-256color` is used.
-  #TERM: alacritty
+  TERM: xterm-256color
 
 window:
   # Window dimensions (changes require restart)
@@ -76,7 +76,7 @@ window:
   #
   # Override the variant of the GTK theme. Commonly supported values are `dark` and `light`.
   # Set this to `None` to use the default theme variant.
-  gtk_theme_variant: dark
+  # gtk_theme_variant: dark
 
 #scrolling:
   # Maximum number of lines in the scrollback buffer.
@@ -90,14 +90,14 @@ window:
 # Font configuration
 font:
   # Normal (roman) font face
-  #normal:
+  normal:
     # Font family
     #
     # Default:
     #   - (macOS) Menlo
     #   - (Linux/BSD) monospace
     #   - (Windows) Consolas
-    family: UbuntuMono Nerf Font
+    family: UbuntuMono Nerd Font
 
     # The `style` can be specified to pick a specific face.
     #style: Regular
@@ -136,7 +136,7 @@ font:
     #style: Bold Italic
 
   # Point size
-  # size: 11.0
+  size: 13.0
 
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
@@ -170,31 +170,78 @@ font:
 # If `true`, bold text is drawn using the bright color variants.
 #draw_bold_text_with_bright_colors: false
 # Colors (Gnome)
+# colors:
+#   primary:
+#     foreground: '#d0cfcc'
+#     background: '#300A24'
+#     bright_foreground: '#ffffff'
+# 
+#   normal:
+#     black:   '#171421'
+#     red:     '#c01c28'
+#     green:   '#26a269'
+#     yellow:  '#a2734c'
+#     blue:    '#12488b'
+#     magenta: '#a347ba'
+#     cyan:    '#2aa1b3'
+#     white:   '#d0cfcc'
+# 
+#   bright:
+#     black:   '#5e5c64'
+#     red:     '#f66151'
+#     green:   '#33d17a'
+#     yellow:  '#e9ad0c'
+#     blue:    '#2a7bde'
+#     magenta: '#c061cb'
+#     cyan:    '#33c7de'
+#     white:   '#ffffff'
+
 colors:
   primary:
-    foreground: '#d0cfcc'
-    background: '#300A24'
-    bright_foreground: '#ffffff'
-
-  normal:
-    black:   '#171421'
-    red:     '#c01c28'
-    green:   '#26a269'
-    yellow:  '#a2734c'
-    blue:    '#12488b'
-    magenta: '#a347ba'
-    cyan:    '#2aa1b3'
-    white:   '#d0cfcc'
-
+    # hard contrast background - '#1d2021'
+    background:        &gruvbox_dark_bg '#282828'
+    # soft contrast background - '#32302f'
+    foreground:        '#ebdbb2'
+    # search:
+    #   matches:
+    #     foreground: '#000000'
+    #     background: '#ffffff'
+    #   focused_match:
+    #    foreground: CellBackground
+    #    background: CellForeground
+    #   bar:
+    #     background: ''
+    #     foreground: ''
+    # line_indicator:
+    #   foreground: None
+    #   background: None
   bright:
-    black:   '#5e5c64'
-    red:     '#f66151'
-    green:   '#33d17a'
-    yellow:  '#e9ad0c'
-    blue:    '#2a7bde'
-    magenta: '#c061cb'
-    cyan:    '#33c7de'
-    white:   '#ffffff'
+    black:   '#928374'
+    red:     '#fb4934'
+    green:   '#b8bb26'
+    yellow:  '#fabd2f'
+    blue:    '#83a598'
+    magenta: '#d3869b'
+    cyan:    '#8ec07c'
+    white:   '#ebdbb2'
+  normal:
+    black:   *gruvbox_dark_bg
+    red:     '#cc241d'
+    green:   '#98971a'
+    yellow:  '#d79921'
+    blue:    '#458588'
+    magenta: '#b16286'
+    cyan:    '#689d6a'
+    white:   '#a89984'
+  dim:
+    black:   '#32302f'
+    red:     '#9d0006'
+    green:   '#79740e'
+    yellow:  '#b57614'
+    blue:    '#076678'
+    magenta: '#8f3f71'
+    cyan:    '#427b58'
+    white:   '#928374'
 
 #colors:
   # Default colors
@@ -303,7 +350,7 @@ colors:
 #
 # Window opacity as a floating point number from `0.0` to `1.0`.
 # The value `0.0` is completely transparent and `1.0` is opaque.
-#background_opacity: 1.0
+background_opacity: 0.9
 
 #selection:
   #semantic_escape_chars: ",│`|:\"' ()[]{}<>\t"
