@@ -9,12 +9,16 @@ export GCC_COLORS=1
 export EDITOR=vim
 export BROWSER=chrome
 
-if [[ ! -f $HOME/.local/bin/starship ]]; then
-    print -P "starship not found, downloading..."
-    command curl -fsSL https://starship.rs/install.sh > /tmp/starship_install.sh
-    print -P "installing starship..."
-    command chmod +x /tmp/starship_install.sh
-    command /tmp/starship_install.sh -b=$HOME/.local/bin/
+if [[ ! -f $HOME/.cargo/bin/rustup ]]; then
+    print -P "rustup not found, installing..."
+    command curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    print -P "installing stable rust toolchain..."
+    command rustup install stable
+fi
+
+if [[ ! -f $HOME/.cargo/bin/starship ]]; then
+    print -P "starship not found, installing..."
+    command cargo install starship
     print -P "starship installed"
 fi
 eval "$(starship init zsh)"
@@ -52,3 +56,4 @@ zinit wait lucid for \
 # bind P and N for EMACS mode
 bindkey -M emacs '^P' history-substring-search-up
 bindkey -M emacs '^N' history-substring-search-down
+set -o emacs
