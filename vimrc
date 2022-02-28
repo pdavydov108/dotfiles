@@ -197,7 +197,13 @@ inoremap jj <ESC>
 cnoremap jj <ESC>
 
 """ dispatch
-autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>mk :Dispatch -compiler=make make -j -C Debug/ <CR>
+if filereadable('/proc/cpuinfo')
+    let g:cpucount = (system('grep -c ^processor /proc/cpuinfo')/2)
+    call system('export VIM_DISPATCH_CORES=g:cpucount')
+else
+    call system('export VIM_DISPATCH_CORES=1')
+endif
+autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>mk :Dispatch -compiler=make make -j$VIM_DISPATCH_CORES -C Debug/ <CR>
 autocmd FileType rust nnoremap <leader>mk :Dispatch cargo build<CR>
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ct :Dispatch -compiler=make clang-tidy -p Debug/  %:p<CR>
 autocmd FileType c,cc,cpp,cxx,h,hpp nnoremap <leader>ctf :Dispatch -compiler=make clang-tidy -p Debug/ -fix-errors -fix %:p<CR>
@@ -219,6 +225,10 @@ set undofile                " Save undo's after file closes
 set undodir=$HOME/.vim/undo " where to save undo histories
 set undolevels=1000         " How many undos
 set undoreload=10000        " number of lines to save for undo
+"create undo directory if it is not present
+if empty(glob('~/.vim/undo'))
+    silent !mkdir ~/.vim/undo
+endif
 
 """ FZF
 set rtp+=~/.fzf

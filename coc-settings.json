@@ -1,20 +1,7 @@
 {
-    "languageserver": {
-        "ccls": {
-            "command": "/home/pablo/ccls/build/ccls",
-            "filetypes": ["c", "cpp", "objc", "objcpp"],
-            "rootPatterns": [".ccls", "compile_commands.json", ".vim/", ".git/", ".hg/"],
-            "initializationOptions": {
-                "cache": {
-                    "directory": "/home/pablo/.ccls"
-                },
-                "client": {
-                    "snippetSupport": true
-                }
-            }
-        }
-    },
+    "clangd.checkUpdates": true,
     "python.linting.mypyEnabled": true,
     "python.linting.prospectorEnabled": true,
-    "tslint.jsEnable": true
+    "tslint.jsEnable": true,
+    "clangd.path": "~/.config/coc/extensions/coc-clangd-data/install/13.0.0/clangd_13.0.0/bin/clangd"
 }

@@ -1,0 +1,18 @@
+Diagnostics:
+  UnusedIncludes: 'Strict'
+  ClangTidy:
+    Add: '-google-readability*,-llvm-include-order*,-readability-implicit-bool-cast,performance*,cppcoreguidelines*,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-cppcoreguidelines-special-member-functions,cert*,misc*,-misc-macro-parentheses,-misc-unused-parameters,clang-analizer*,boost*'
+    CleckOptions:
+      llvm-namespace-comment.SpacesBeforeComments: '1'
+      readability-braces-around-statements.ShortStatementLines: '0'
+      readability-function-size.BranchThreshold: '10'
+      readability-function-size.LineThreshold: '100'
+      readability-identifier-naming.AbstractClassCase: 'CamelCase'
+      readability-identifier-naming.ClassCase: 'CamelCase'
+      readability-identifier-naming.ClassMemberPrefix: '_'
+      readability-identifier-naming.ClassMethodCase: 'lower_case'
+      readability-identifier-naming.ConstantCase: 'UPPER_CASE'
+InlayHints:
+  Enabled: Yes
+  ParameterNames: Yes
+  DeducedTypes: Yes
