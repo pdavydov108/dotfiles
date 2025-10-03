@@ -6,9 +6,6 @@ local keymap_set = vim.keymap.set
 local default_opts = { noremap = true, silent = true }
 local expr_opts = { noremap = true, expr = true, silent = true }
 
-g.mapleader = ";"
-g.maplocalleader = ";"
-
 opt.termguicolors = true -- Enable colors in terminal
 opt.hlsearch = true --Set highlight on search
 opt.number = true --Make line numbers default
@@ -51,4 +48,17 @@ keymap('n', '[b', ':bn<CR>', default_opts)
 keymap('n', ']b', ':bp<CR>', default_opts)
 
 -- LSP keys
-keymap('n', '<leader>jj', '<c-]>', default_opts)
+vim.keymap.set('n', '<leader>jj', '<c-]>', default_opts)
+vim.diagnostic.config({
+  virtual_text = true,
+  virtual_lines = false,
+  underline = false,
+  update_in_insert = false
+})
+-- vim.keymap.set("n", "<leader>fr", vim.lsp.buf.references, default_opts)
+-- vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, default_opts)
+
+-- vim.opt.completeopt = {'menuone', 'noselect', 'noinsert'}
+opt.history = 1000 -- longer command history
+opt.undolevels = 1000 -- more undo levels
+opt.undofile = true -- persistent undo between sessions

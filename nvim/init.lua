@@ -1,3 +1,7 @@
+local g = vim.g
+g.mapleader = ";"
+g.maplocalleader = ";"
+
 -- Ensure lazy.nvim is installed
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -10,6 +14,9 @@ if not vim.loop.fs_stat(lazypath) then
 		lazypath,
 	})
 end
+
+--- Define vim to avoid diagnostics warning
+vim = vim or {}
 vim.opt.rtp:prepend(lazypath)
 
 local has_words_before = function()
@@ -20,7 +27,7 @@ end
 
 require("lazy").setup({
 	-- Plugin: Treesitter for syntax highlighting
-	{
+		{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate", -- Run :TSUpdate after installation
 		event = { "BufReadPost", "BufNewFile" }, -- Load on file open
@@ -30,9 +37,62 @@ require("lazy").setup({
 				highlight = { enable = true },
 				auto_install = true,
 				ignore_install = {},
+					modules = {}, -- Placeholder for required fields
+					sync_install = false, -- Placeholder for required fields
 			})
 		end,
 	},
+	{
+		"folke/snacks.nvim",
+		priority = 1000,
+		lazy = false,
+		---@type snacks.Config
+		opts = {
+			-- your configuration comes here
+			-- or leave it empty to use the default settings
+			-- refer to the configuration section below
+			bigfile = { enabled = true },
+			dashboard = { enabled = true },
+			explorer = { enabled = false },
+			indent = { enabled = true },
+			input = { enabled = true },
+			picker = { enabled = true },
+			notifier = { enabled = true },
+			quickfile = { enabled = true },
+			scope = { enabled = true },
+			scroll = { enabled = true },
+			statuscolumn = { enabled = true },
+			words = { enabled = true },
+		},
+		keys = {
+			{ "<leader>/", function() Snacks.picker.grep() end, desc = "Grep" },
+			{ "<leader>gb", function() Snacks.picker.git_branches() end, desc = "Git Branches" },
+			{ "<leader>T",      function() Snacks.terminal() end, desc = "Toggle Terminal" },
+			{ "<leader>FF", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
+			{ "<leader>fr", function() Snacks.picker.lsp_references() end, nowait = true, desc = "References" },
+			-- { "gI", function() Snacks.picker.lsp_implementations() end, desc = "Goto Implementation" },
+			-- { "gy", function() Snacks.picker.lsp_type_definitions() end, desc = "Goto T[y]pe Definition" },
+			{ "<leader>ss", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
+		},
+	},
+	{ "alexghergh/nvim-tmux-navigation", config = function()
+
+		local nvim_tmux_nav = require('nvim-tmux-navigation')
+
+		nvim_tmux_nav.setup {
+			disable_when_zoomed = true -- defaults to false
+		}
+
+		vim.keymap.set('n', "<C-h>", nvim_tmux_nav.NvimTmuxNavigateLeft)
+		vim.keymap.set('n', "<C-j>", nvim_tmux_nav.NvimTmuxNavigateDown)
+		vim.keymap.set('n', "<C-k>", nvim_tmux_nav.NvimTmuxNavigateUp)
+		vim.keymap.set('n', "<C-l>", nvim_tmux_nav.NvimTmuxNavigateRight)
+		-- vim.keymap.set('n', "<C-\\>", nvim_tmux_nav.NvimTmuxNavigateLastActive)
+		-- vim.keymap.set('n', "<C-Space>", nvim_tmux_nav.NvimTmuxNavigateNext)
+
+		end
+	},
+	{ "RRethy/vim-illuminate" },
 	{
 		"ellisonleao/gruvbox.nvim",
 		priority = 1000, -- Load Gruvbox before other plugins
@@ -65,6 +125,7 @@ require("lazy").setup({
 		},
 		config = true
 	},
+	{ "nvim-tree/nvim-web-devicons", opts = {} },
 	{
 		'nvim-lualine/lualine.nvim',
 		dependencies = { 'nvim-tree/nvim-web-devicons' },
@@ -123,7 +184,8 @@ require("lazy").setup({
 			require("mason").setup()
 			require("mason-lspconfig").setup({
 				ensure_installed = { "pyright", "clangd", "rust_analyzer", "lua_ls"},
-				automatic_installation = true
+				automatic_installation = true,
+				automatic_enable = true, -- Placeholder for required fields
 			})
 			require("mason-nvim-dap").setup({
 				ensure_installed = { "codelldb", "debugpy"},
@@ -136,10 +198,12 @@ require("lazy").setup({
 						runtime = {
 							-- Tell Lua which version you're using (most likely LuaJIT for Neovim)
 							version = "LuaJIT",
+							pathStrict = false, -- Disable strict path checking
 						},
 						diagnostics = {
 							-- Recognize the `vim` global
 							globals = { "vim" },
+							checkThirdParty = false,
 						},
 						workspace = {
 							-- Make the server aware of Neovim runtime files
@@ -154,6 +218,7 @@ require("lazy").setup({
 			})
 		end,
 	},
+	{ "rafamadriz/friendly-snippets" },
 	{
 		"hrsh7th/nvim-cmp",
 		dependencies = {
@@ -170,6 +235,7 @@ require("lazy").setup({
 		config = function()
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
+			require("luasnip.loaders.from_vscode").lazy_load()
 			local lspkind = require("lspkind")
 
 			cmp.setup({
@@ -248,8 +314,9 @@ require("lazy").setup({
 	},
 	{
 		'mrcjkb/rustaceanvim',
-		version = '^5', -- Recommended
+		version = '^6', -- Recommended
 		lazy = false, -- This plugin is already lazy
+		auto_focus = true,
 		-- event = { "BufReadPost", "BufNewFile" }, -- Load on file open
 	},
 	{
@@ -372,4 +439,88 @@ require("lazy").setup({
 		   "3rd/image.nvim",
 	   },
    },
+   {
+	   "yetone/avante.nvim",
+	   -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+	   -- ⚠️ must add this setting! ! !
+	   build = "make",
+	   event = "VeryLazy",
+	   version = false, -- Never set this value to "*"! Never!
+	   ---@module 'avante'
+	   ---@type avante.Config
+	   opts = {
+		   -- add any opts here
+		   -- for example
+		   provider = "openai",
+		   providers = {
+			   claude = {
+				   endpoint = "https://api.anthropic.com",
+				   model = "claude-sonnet-4-20250514",
+				   timeout = 30000, -- Timeout in milliseconds
+				   extra_request_body = {
+					   temperature = 0.75,
+					   max_tokens = 20480,
+				   },
+			   },
+			   moonshot = {
+				   endpoint = "https://api.moonshot.ai/v1",
+				   model = "kimi-k2-0711-preview",
+				   timeout = 30000, -- Timeout in milliseconds
+				   extra_request_body = {
+					   temperature = 0.75,
+					   max_tokens = 32768,
+				   },
+			   },
+		   },
+		   suggestion = {
+			   debounce = 600,
+			   throttle = 600,
+		   },
+		   mappings = {
+			   ask = "<leader>ua", -- ask
+			   edit = "<leader>ue", -- edit
+			   refresh = "<leader>ur", -- refresh
+		   },
+	   },
+	   dependencies = {
+		   "nvim-lua/plenary.nvim",
+		   "MunifTanjim/nui.nvim",
+		   --- The below dependencies are optional,
+		   "echasnovski/mini.pick", -- for file_selector provider mini.pick
+		   "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+		   "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+		   "ibhagwan/fzf-lua", -- for file_selector provider fzf
+		   "stevearc/dressing.nvim", -- for input provider dressing
+		   "folke/snacks.nvim", -- for input provider snacks
+		   "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+		   "zbirenbaum/copilot.lua", -- for providers='copilot'
+		   {
+			   -- support for image pasting
+			   "HakonHarnes/img-clip.nvim",
+			   event = "VeryLazy",
+			   opts = {
+				   -- recommended settings
+				   default = {
+					   embed_image_as_base64 = false,
+					   prompt_for_file_name = false,
+					   drag_and_drop = {
+						   insert_mode = true,
+					   },
+					   -- required for Windows users
+					   use_absolute_path = true,
+				   },
+			   },
+		   },
+		   {
+			   -- Make sure to set this up properly if you have lazy=true
+			   'MeanderingProgrammer/render-markdown.nvim',
+			   opts = {
+				   file_types = { "markdown", "Avante" },
+			   },
+			   ft = { "markdown", "Avante" },
+		   },
+	   },
+   },
+   { "duane9/nvim-rg" },
 })
+
